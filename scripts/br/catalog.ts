@@ -1,6 +1,7 @@
 /**
  * Parsers for the official Baraba Ride pages on toy.bandai.co.jp. Only factual
- * fields are extracted — never images or description prose.
+ * fields are extracted — never description prose. Shot URLs are read so the
+ * runner can publish the shots to the image CDN; they are not persisted.
  */
 import * as cheerio from 'cheerio';
 import type { ContentsKey, Price, Product, ProductType, Style } from '../../src/lib/br/types.ts';
@@ -33,6 +34,8 @@ export interface ItemJa {
   price: Price;
   releaseDate: string;
   contents: Product['contents'];
+  /** Source URLs of the official shots, in page order. Not persisted. */
+  shotUrls: string[];
   manualUrl?: string;
 }
 
@@ -56,6 +59,9 @@ const TYPES_JA: Record<string, ProductType> = {
 
 /** The stable manual link. The PDF behind it is served from a time-signed URL that expires. */
 const MANUAL_URL = /^https:\/\/toy\.bandai\.co\.jp\/manuals\/pdf\.php\?id=\d+$/;
+
+/** An official shot. The path carries an opaque token that Bandai may rotate. */
+const SHOT_URL = /^https:\/\/assets-toy\.bandai\.co\.jp\/\S+\.jpg$/;
 
 /** Contents labels in output order. */
 const CONTENTS_JA: [string, ContentsKey][] = [
@@ -162,8 +168,24 @@ export function parseItemJa(html: string, code: string): ItemJa {
     price,
     releaseDate,
     contents: parseContents($, code),
+    shotUrls: parseShotUrls($, code),
     ...(manualUrl && { manualUrl }),
   };
+}
+
+/** Reads the main gallery. The page repeats the same shots in a thumbnail strip, which is skipped. */
+function parseShotUrls($: cheerio.CheerioAPI, code: string): string[] {
+  const urls = $('.main_itemImgGallery img')
+    .map((_, el) => $(el).attr('src') ?? '')
+    .get();
+  if (urls.length === 0) {
+    throw new CatalogParseError(code, 'images', 'no shots found');
+  }
+  const bad = urls.find((url) => !SHOT_URL.test(url));
+  if (bad !== undefined) {
+    throw new CatalogParseError(code, 'images', `unexpected shot "${bad}"`);
+  }
+  return urls;
 }
 
 /** Reads the manual download button. Items without one have no manual. */
@@ -228,6 +250,11 @@ function titleCase(text: string): string {
     .join(' ');
 }
 
+/** Asset path of a product's nth shot (1-based). The image CDN location derives from it. */
+export function productImagePath(code: string, shot: number): string {
+  return `/assets/baraba-ride/products/${code}/${shot}.jpg`;
+}
+
 export function buildProduct(entry: LineupEntry, ja: ItemJa, en: ItemEn): Product {
   return {
     code: entry.code,
@@ -238,6 +265,7 @@ export function buildProduct(entry: LineupEntry, ja: ItemJa, en: ItemEn): Produc
     price: ja.price,
     releaseDate: ja.releaseDate,
     contents: ja.contents,
+    images: ja.shotUrls.map((_, i) => productImagePath(entry.code, i + 1)),
     sourceId: entry.sourceId,
     sourceUrl: itemUrl(entry.sourceId),
     ...(ja.manualUrl && { manualUrl: ja.manualUrl }),

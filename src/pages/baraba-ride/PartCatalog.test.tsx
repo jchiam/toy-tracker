@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { PartCatalog } from './PartCatalog';
@@ -13,7 +13,10 @@ function renderParts(parts: Part[] = PARTS) {
   );
 }
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllEnvs();
+});
 
 describe('PartCatalog', () => {
   it('groups parts under their slot headings', () => {
@@ -58,5 +61,46 @@ describe('PartCatalog', () => {
     const card = screen.getByRole('heading', { name: 'Prototype' }).closest('li')!;
     expect(within(card).getByText('Source product unknown')).toBeInTheDocument();
     expect(screen.getAllByText('Source product unknown')).toHaveLength(1);
+  });
+
+  it('shows each variant of a part in product-code order, with colour and product', () => {
+    vi.stubEnv('VITE_IMAGEKIT_URL_ENDPOINT', 'https://ik.imagekit.io/example');
+    renderParts();
+    const variants = within(screen.getByRole('list', { name: 'Storm Falcon variants' }));
+    expect(variants.getAllByRole('link').map((link) => link.textContent)).toEqual([
+      'WhiteBR-01',
+      'RedBR-04',
+      'BlackBR-07',
+    ]);
+    expect(variants.getByRole('img', { name: 'Storm Falcon, Red' }).getAttribute('src')).toMatch(
+      /cm-extract:e-bgremove:w-256,c-at_max,bg-FFFFFF\/baraba_ride\/products\/BR_04\/3\.jpg$/,
+    );
+  });
+
+  it('links a variant to the product it ships in', () => {
+    renderParts();
+    const variants = within(screen.getByRole('list', { name: 'Storm Falcon variants' }));
+    expect(variants.getAllByRole('link')[2]).toHaveAttribute('href', '/baraba-ride?product=BR-07');
+  });
+
+  it('uses the first variant as the image of the part itself', () => {
+    vi.stubEnv('VITE_IMAGEKIT_URL_ENDPOINT', 'https://ik.imagekit.io/example');
+    renderParts();
+    const card = screen.getByRole('heading', { name: 'Storm Falcon' }).closest('li')!;
+    expect(within(card).getByRole('img', { name: 'Storm Falcon' }).getAttribute('src')).toBe(
+      within(card).getByRole('img', { name: 'Storm Falcon, White' }).getAttribute('src'),
+    );
+  });
+
+  it('shows a placeholder and no variants for a part with no recorded variant', () => {
+    renderParts([
+      ...PARTS,
+      { id: 'bumper:prototype', slot: 'bumper', nameEn: 'Prototype', nameJa: 'プロトタイプ' },
+    ]);
+    const card = screen.getByRole('heading', { name: 'Prototype' }).closest('li')!;
+    expect(within(card).getByRole('img', { name: 'Prototype' })).toHaveClass(
+      'br-image-placeholder',
+    );
+    expect(within(card).queryByRole('list', { name: 'Prototype variants' })).toBeNull();
   });
 });

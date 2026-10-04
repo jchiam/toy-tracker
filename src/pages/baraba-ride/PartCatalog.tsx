@@ -1,8 +1,10 @@
 import { Link } from 'react-router';
 import type { Part, Product, ProductParts } from '@/lib/br/types';
 import { SLOTS } from '@/lib/br/types';
-import { findPartSources } from '@/lib/br/catalog';
+import { findPartSources, findPartVariants, variantShot } from '@/lib/br/catalog';
 import { SLOT_HEADINGS, SLOT_LABELS } from '@/lib/br/labels';
+import { getVariantImageUrl } from '@/lib/imagekit';
+import { CatalogImage } from './CatalogImage';
 
 interface PartCatalogProps {
   parts: Part[];
@@ -26,14 +28,46 @@ export function PartCatalog({ parts, products, productParts }: PartCatalogProps)
           <ul className="br-part-grid">
             {slotParts.map((part) => {
               const sources = findPartSources(part.id, products, productParts);
+              const variants = findPartVariants(part.id, products, productParts).map(
+                ({ product, variant }) => {
+                  const shot = variantShot(product, variant);
+                  return {
+                    product,
+                    variant,
+                    src: shot && getVariantImageUrl(shot.path, shot.crop),
+                  };
+                },
+              );
               return (
                 <li key={part.id} className="br-part-card">
+                  <CatalogImage
+                    className="br-part-image"
+                    src={variants[0]?.src ?? null}
+                    alt={part.nameEn}
+                  />
                   <span className="br-slot">{SLOT_LABELS[part.slot]}</span>
                   <h3 className="br-part-name">{part.nameEn}</h3>
                   {part.nameJa !== part.nameEn && (
                     <p className="br-name-ja" lang="ja">
                       {part.nameJa}
                     </p>
+                  )}
+                  {variants.length > 0 && (
+                    <ul className="br-variant-strip" aria-label={`${part.nameEn} variants`}>
+                      {variants.map(({ product, variant, src }) => (
+                        <li key={product.code}>
+                          <Link to={{ search: `?product=${product.code}` }} className="br-variant">
+                            <CatalogImage
+                              className="br-variant-image"
+                              src={src}
+                              alt={`${part.nameEn}, ${variant.color}`}
+                            />
+                            <span className="br-variant-color">{variant.color}</span>
+                            <span className="br-code">{product.code}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                   )}
                   {sources.length === 0 ? (
                     <p className="br-unknown">Source product unknown</p>

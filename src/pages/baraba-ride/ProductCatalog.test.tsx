@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
@@ -19,7 +19,10 @@ const listedCodes = () =>
 const filter = (group: string, name: string) =>
   within(screen.getByRole('group', { name: group })).getByRole('button', { name });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllEnvs();
+});
 
 describe('ProductCatalog', () => {
   it('lists the launch lineup in code order', () => {
@@ -88,5 +91,24 @@ describe('ProductCatalog', () => {
     await user.click(filter('Type', 'All'));
     await user.click(filter('Style', 'All'));
     expect(listedCodes()).toHaveLength(PRODUCTS.length);
+  });
+
+  it('shows the first shot of each product as its thumbnail', () => {
+    vi.stubEnv('VITE_IMAGEKIT_URL_ENDPOINT', 'https://ik.imagekit.io/example');
+    renderCatalog();
+    for (const product of PRODUCTS) {
+      const image = screen.getByRole('img', { name: `${product.code} ${product.nameEn}` });
+      expect(image).toHaveAttribute(
+        'src',
+        `https://ik.imagekit.io/example/tr:w-480,c-at_max/baraba_ride/products/${product.code.replace('-', '_')}/1.jpg`,
+      );
+    }
+  });
+
+  it('shows a placeholder per product when the image CDN is not configured', () => {
+    renderCatalog();
+    const images = screen.getAllByRole('img');
+    expect(images).toHaveLength(PRODUCTS.length);
+    for (const image of images) expect(image).toHaveClass('br-image-placeholder');
   });
 });

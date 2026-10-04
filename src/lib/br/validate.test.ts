@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { validateCatalog } from './validate';
-import { PARTS, PRODUCTS, PRODUCT_PARTS } from './catalog';
-import type { Part, Product, ProductParts } from './types';
+import {
+  PARTS,
+  PRODUCTS,
+  PRODUCT_PARTS,
+  findPartVariants,
+  resolveProductParts,
+  variantShot,
+} from './catalog';
+import type { CropBox, Part, Product, ProductParts } from './types';
 
 const product = (code: string, contents: Product['contents']): Product => ({
   code,
@@ -12,6 +19,7 @@ const product = (code: string, contents: Product['contents']): Product => ({
   price: { amount: 3300, currency: 'JPY', taxIncluded: true },
   releaseDate: '2026-09-19',
   contents,
+  images: [1, 2, 3, 4, 5].map((n) => `/assets/baraba-ride/products/${code}/${n}.jpg`),
   sourceId: '01_00000',
   sourceUrl: 'https://example.com/',
 });
@@ -37,7 +45,11 @@ const mapping: ProductParts[] = [
 
 describe('validateCatalog', () => {
   it('accepts a consistent catalog', () => {
-    expect(validateCatalog(products, parts, mapping)).toEqual({ errors: [], unmapped: [] });
+    expect(validateCatalog(products, parts, mapping)).toEqual({
+      errors: [],
+      unmapped: [],
+      missingImages: ['BR-01 cowl:storm-falcon', 'BR-01 tire:h36'],
+    });
   });
 
   it('rejects a mapping for an unknown product code, naming it', () => {
@@ -76,7 +88,11 @@ describe('validateCatalog', () => {
   });
 
   it('reports part-bearing products with no mapping without failing', () => {
-    expect(validateCatalog(products, parts, [])).toEqual({ errors: [], unmapped: ['BR-01'] });
+    expect(validateCatalog(products, parts, [])).toEqual({
+      errors: [],
+      unmapped: ['BR-01'],
+      missingImages: [],
+    });
   });
 
   it('does not report products that contain no parts', () => {
@@ -84,9 +100,95 @@ describe('validateCatalog', () => {
   });
 });
 
+describe('validateCatalog variants', () => {
+  const withImage = (image: { shot: number; crop: CropBox }): ProductParts[] => [
+    {
+      ...mapping[0],
+      parts: [
+        { partId: 'cowl:storm-falcon', quantity: 1, variant: { color: 'White', image } },
+        { partId: 'tire:h36', quantity: 4, variant: { color: 'Red' } },
+      ],
+    },
+  ];
+  const crop = { x: 0, y: 0, w: 300, h: 300 };
+
+  it('accepts a variant image inside one of the product shots', () => {
+    const result = validateCatalog(products, parts, withImage({ shot: 3, crop }));
+    expect(result.errors).toEqual([]);
+  });
+
+  it('reports entries that have no variant image without failing', () => {
+    const result = validateCatalog(products, parts, withImage({ shot: 3, crop }));
+    expect(result.missingImages).toEqual(['BR-01 tire:h36']);
+  });
+
+  it('rejects a shot the product does not have, naming product, part and shot', () => {
+    const { errors } = validateCatalog(products, parts, withImage({ shot: 6, crop }));
+    expect(errors).toEqual(['BR-01 "cowl:storm-falcon" variant uses shot 6 but the product has 5']);
+    expect(validateCatalog(products, parts, withImage({ shot: 0, crop })).errors).toHaveLength(1);
+  });
+
+  it.each([
+    ['extends past the right edge', { x: 1300, y: 0, w: 300, h: 300 }],
+    ['extends past the bottom edge', { x: 0, y: 1300, w: 300, h: 300 }],
+    ['has a negative origin', { x: -1, y: 0, w: 300, h: 300 }],
+    ['has no area', { x: 0, y: 0, w: 0, h: 300 }],
+    ['is not whole pixels', { x: 0.5, y: 0, w: 300, h: 300 }],
+  ])('rejects a crop box that %s', (_, bad) => {
+    const { errors } = validateCatalog(products, parts, withImage({ shot: 3, crop: bad }));
+    expect(errors).toEqual([
+      'BR-01 "cowl:storm-falcon" variant crop is not inside the 1500px shot',
+    ]);
+  });
+});
+
 describe('committed catalog data', () => {
   it('is valid', () => {
     expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS).errors).toEqual([]);
+  });
+
+  it('pictures every mapped part', () => {
+    expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS).missingImages).toEqual([]);
+  });
+
+  it('records every variant of a part in product-code order', () => {
+    expect(
+      findPartVariants('cowl:storm-falcon').map((v) => [v.product.code, v.variant.color]),
+    ).toEqual([
+      ['BR-01', 'White'],
+      ['BR-04', 'Red'],
+      ['BR-07', 'Black'],
+    ]);
+  });
+
+  it('resolves a product part with its variant and the shot picturing it', () => {
+    const cowl = resolveProductParts('BR-07')!.find((p) => p.part.slot === 'cowl')!;
+    expect(cowl.variant?.color).toBe('Black');
+    expect(
+      variantShot(
+        PRODUCTS.find((p) => p.code === 'BR-07')!,
+        cowl.variant,
+      ),
+    ).toEqual({
+      path: '/assets/baraba-ride/products/BR-07/3.jpg',
+      crop: cowl.variant!.image!.crop,
+    });
+  });
+
+  it('gives a variant without an image no shot', () => {
+    expect(variantShot(PRODUCTS[0], { color: 'Red' })).toBeNull();
+    expect(variantShot(PRODUCTS[0], undefined)).toBeNull();
+  });
+
+  it('references images by asset path only, never a CDN or source URL', () => {
+    const images = PRODUCTS.flatMap((p) => p.images);
+    expect(images.length).toBeGreaterThan(0);
+    for (const path of images) {
+      expect(path).toMatch(/^\/assets\/baraba-ride\/products\/BR-\d+\/\d+\.jpg$/);
+    }
+    expect(JSON.stringify([PRODUCTS, PRODUCT_PARTS])).not.toMatch(
+      /https?:\/\/[^"]*\.(jpg|png|webp)/,
+    );
   });
 
   it('contains one record per product code, including the launch lineup', () => {
