@@ -1,0 +1,221 @@
+[
+  {
+    "code": "BR-01",
+    "nameEn": "Storm Falcon",
+    "nameJa": "ストームファルコン",
+    "type": "starter-set",
+    "style": "upper",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21000",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21000/"
+  },
+  {
+    "code": "BR-02",
+    "nameEn": "Lash Stallion",
+    "nameJa": "ラッシュスタリオン",
+    "type": "starter-set",
+    "style": "spin",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21001",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21001/"
+  },
+  {
+    "code": "BR-03",
+    "nameEn": "Fury Lizard",
+    "nameJa": "フューリーリザード",
+    "type": "starter-set",
+    "style": "dash",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21009",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21009/"
+  },
+  {
+    "code": "BR-04",
+    "nameEn": "Storm Falcon",
+    "nameJa": "ストームファルコン",
+    "type": "starter-set",
+    "style": "upper",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21007",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21007/"
+  },
+  {
+    "code": "BR-05",
+    "nameEn": "Lash Stallion",
+    "nameJa": "ラッシュスタリオン",
+    "type": "starter-set",
+    "style": "spin",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21006",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21006/"
+  },
+  {
+    "code": "BR-06",
+    "nameEn": "Fury Lizard",
+    "nameJa": "フューリーリザード",
+    "type": "starter-set",
+    "style": "dash",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "chassis": 1,
+      "charger": 1,
+      "sticker": 1
+    },
+    "sourceId": "01_21005",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21005/"
+  },
+  {
+    "code": "BR-07",
+    "nameEn": "Falcon Kit",
+    "nameJa": "ファルコンキット",
+    "type": "booster-set",
+    "style": "spin",
+    "price": {
+      "amount": 1540,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "sticker": 1
+    },
+    "sourceId": "01_21004",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21004/"
+  },
+  {
+    "code": "BR-08",
+    "nameEn": "Stallion Kit",
+    "nameJa": "スタリオンキット",
+    "type": "booster-set",
+    "style": "dash",
+    "price": {
+      "amount": 1540,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "sticker": 1
+    },
+    "sourceId": "01_21003",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21003/"
+  },
+  {
+    "code": "BR-09",
+    "nameEn": "Lizard Kit",
+    "nameJa": "リザードキット",
+    "type": "booster-set",
+    "style": "upper",
+    "price": {
+      "amount": 1540,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "cowl": 1,
+      "bumper": 1,
+      "tire": 4,
+      "sticker": 1
+    },
+    "sourceId": "01_21002",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21002/"
+  },
+  {
+    "code": "BR-10",
+    "nameEn": "Fold Colosseum",
+    "nameJa": "フォールドコロシアム",
+    "type": "tool",
+    "style": null,
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-09-19",
+    "contents": {
+      "body": 1
+    },
+    "sourceId": "01_21008",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21008/"
+  }
+]

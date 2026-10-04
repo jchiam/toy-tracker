@@ -9,3 +9,4 @@ storybook-static
 coverage
 test-results
 playwright-report
+scripts/br/__fixtures__
