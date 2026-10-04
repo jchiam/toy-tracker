@@ -17,7 +17,7 @@ Launch lineup (verified against the official site on 2026-10-04):
 | BR-09 | Lizard Kit     | Booster Set | Upper | 1,540                  |
 | BR-10 | Fold Colosseum | Tool        | —     | 3,300                  |
 
-Starter sets contain cowl ×1, bumper ×1, tire ×4, chassis ×1, Ride Charger ×1, sticker sheet. Booster sets contain cowl ×1, bumper ×1, tire ×4, sticker sheet (no chassis or charger). How BR-04–06 differ from BR-01–03 is not stated on the product pages and must be confirmed during curation.
+Starter sets contain cowl ×1, bumper ×1, tire ×4, chassis ×1, Ride Charger ×1, sticker sheet. Booster sets contain cowl ×1, bumper ×1, tire ×4, sticker sheet (no chassis or charger). How BR-04–06 differ from BR-01–03 is not stated on the product pages; see Open Questions for how this was resolved.
 
 Part names seen so far (from the official "Custom Encyclopedia" example builds): chassis `Alpha`; cowls `Storm Falcon`, `Lash Stallion`, `Fury Lizard`; bumpers `Dual Blade`, `Wide Shield`, `Mega Launcher`; tires `RW32`, `LW32`, `C36`, `H36`.
 
@@ -71,6 +71,12 @@ There is no official JSON API, no companion-app data, and no published part stat
 
 ## Open Questions
 
-- What distinguishes BR-04–06 from BR-01–03 (colour variant, bundled extras)?
-- Exact named bumper and tires in each starter and booster box — confirm from manuals or packaging.
-- Is `Alpha` the only chassis at launch?
+Resolved during implementation (2026-10-04):
+
+- **BR-04–06 vs BR-01–03:** colour variants with the same parts. Source: the fan compilation at `kyoganken.sakura.ne.jp/baraba` (updated 2026-08-20); the official pages list identical contents and style for each pair.
+- **Named parts per box:** taken from the same fan compilation and consistent with each official product description (e.g. BR-07 "large bumper, spin-friendly tires" = Mega Launcher + H36). The official manuals sit behind a download gate and were not read.
+- **Chassis:** `Alpha` is the only chassis at launch.
+
+Still unconfirmed:
+
+- The RW32 / LW32 split inside BR-01, BR-04 and BR-09. The box lists 4 tires; 2 + 2 is assumed and flagged in each mapping's `source` note. Confirm against a physical box.
