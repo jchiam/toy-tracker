@@ -28,7 +28,7 @@ Git hooks (husky): pre-commit runs openspec validate + format:check + lint + tes
 
 ## CI
 
-GitHub Actions (`.github/workflows/`): `ci.yml` runs openspec validate (and fails on active changes with incomplete tasks), format:check, lint, `verify:csp` (against the `VITE_SUPABASE_URL` repo secret; skips when unset), unit tests, build, `npm audit`, then a 3-browser Playwright job (with dummy Supabase env vars). No deploy step — deploys are handled outside CI. `codecov.yml` uploads coverage (needs `CODECOV_TOKEN`; upload failure doesn't fail CI).
+GitHub Actions (`.github/workflows/`): `ci.yml` runs openspec validate (and fails on active changes with incomplete tasks), format:check, lint, `verify:csp` (against the `VITE_SUPABASE_URL` repo secret; skips when unset), unit tests, build, `npm audit --omit=dev` (production dependencies only), then a 3-browser Playwright job (with dummy Supabase env vars). No deploy step — deploys are handled outside CI. `codecov.yml` uploads coverage (needs `CODECOV_TOKEN`; upload failure doesn't fail CI).
 
 ## OpenSpec
 

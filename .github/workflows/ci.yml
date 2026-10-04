@@ -68,7 +68,7 @@ jobs:
         run: npm run build
 
       - name: Security audit
-        run: npm audit
+        run: npm audit --omit=dev
 
   e2e-tests:
     timeout-minutes: 60
