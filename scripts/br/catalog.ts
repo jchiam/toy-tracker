@@ -33,6 +33,7 @@ export interface ItemJa {
   price: Price;
   releaseDate: string;
   contents: Product['contents'];
+  manualUrl?: string;
 }
 
 export interface ItemEn {
@@ -52,6 +53,9 @@ const TYPES_JA: Record<string, ProductType> = {
   ブースターセット: 'booster-set',
   ツール: 'tool',
 };
+
+/** The stable manual link. The PDF behind it is served from a time-signed URL that expires. */
+const MANUAL_URL = /^https:\/\/toy\.bandai\.co\.jp\/manuals\/pdf\.php\?id=\d+$/;
 
 /** Contents labels in output order. */
 const CONTENTS_JA: [string, ContentsKey][] = [
@@ -150,7 +154,28 @@ export function parseItemJa(html: string, code: string): ItemJa {
   }
   const releaseDate = `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}`;
 
-  return { code, type, nameJa, price, releaseDate, contents: parseContents($, code) };
+  const manualUrl = parseManualUrl($, code);
+  return {
+    code,
+    type,
+    nameJa,
+    price,
+    releaseDate,
+    contents: parseContents($, code),
+    ...(manualUrl && { manualUrl }),
+  };
+}
+
+/** Reads the manual download button. Items without one have no manual. */
+function parseManualUrl($: cheerio.CheerioAPI, code: string): string | undefined {
+  const link = $('.manual_space a.downloadBtn');
+  if (link.length === 0) return undefined;
+
+  const href = link.attr('href') ?? '';
+  if (link.length > 1 || !MANUAL_URL.test(href)) {
+    throw new CatalogParseError(code, 'manualUrl', `unexpected link "${href}"`);
+  }
+  return href;
 }
 
 /** Reads the `［セット内容］` list — the lines of `・<label>…<count>` that follow it. */
@@ -215,6 +240,7 @@ export function buildProduct(entry: LineupEntry, ja: ItemJa, en: ItemEn): Produc
     contents: ja.contents,
     sourceId: entry.sourceId,
     sourceUrl: itemUrl(entry.sourceId),
+    ...(ja.manualUrl && { manualUrl: ja.manualUrl }),
   };
 }
 

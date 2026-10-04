@@ -83,6 +83,11 @@ export function ProductDetail({ product, parts }: ProductDetailProps) {
       <a href={product.sourceUrl} target="_blank" rel="noopener noreferrer" className="br-source">
         Official product page ↗
       </a>
+      {product.manualUrl && (
+        <a href={product.manualUrl} target="_blank" rel="noopener noreferrer" className="br-source">
+          Instruction manual ↗
+        </a>
+      )}
     </article>
   );
 }

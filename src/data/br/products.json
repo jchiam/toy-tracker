@@ -20,7 +20,8 @@
       "sticker": 1
     },
     "sourceId": "01_21000",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21000/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21000/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852278"
   },
   {
     "code": "BR-02",
@@ -43,7 +44,8 @@
       "sticker": 1
     },
     "sourceId": "01_21001",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21001/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21001/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852279"
   },
   {
     "code": "BR-03",
@@ -66,7 +68,8 @@
       "sticker": 1
     },
     "sourceId": "01_21009",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21009/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21009/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852280"
   },
   {
     "code": "BR-04",
@@ -89,7 +92,8 @@
       "sticker": 1
     },
     "sourceId": "01_21007",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21007/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21007/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852822"
   },
   {
     "code": "BR-05",
@@ -112,7 +116,8 @@
       "sticker": 1
     },
     "sourceId": "01_21006",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21006/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21006/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852815"
   },
   {
     "code": "BR-06",
@@ -135,7 +140,8 @@
       "sticker": 1
     },
     "sourceId": "01_21005",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21005/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21005/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852816"
   },
   {
     "code": "BR-07",
@@ -156,7 +162,8 @@
       "sticker": 1
     },
     "sourceId": "01_21004",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21004/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21004/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852818"
   },
   {
     "code": "BR-08",
@@ -177,7 +184,8 @@
       "sticker": 1
     },
     "sourceId": "01_21003",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21003/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21003/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852819"
   },
   {
     "code": "BR-09",
@@ -198,7 +206,8 @@
       "sticker": 1
     },
     "sourceId": "01_21002",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21002/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21002/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852820"
   },
   {
     "code": "BR-10",
@@ -216,6 +225,7 @@
       "body": 1
     },
     "sourceId": "01_21008",
-    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21008/"
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21008/",
+    "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852821"
   }
 ]

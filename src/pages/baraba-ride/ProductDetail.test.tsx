@@ -58,6 +58,23 @@ describe('ProductDetail', () => {
     expect(link).toHaveAttribute('target', '_blank');
   });
 
+  it('links to the official instruction manual in a new tab', () => {
+    renderDetail('BR-01');
+    const link = screen.getByRole('link', { name: /Instruction manual/ });
+    expect(link).toHaveAttribute('href', 'https://toy.bandai.co.jp/manuals/pdf.php?id=2852278');
+    expect(link).toHaveAttribute('target', '_blank');
+  });
+
+  it('shows no manual link for a product without one', () => {
+    render(
+      <MemoryRouter>
+        <ProductDetail product={{ ...product('BR-01'), manualUrl: undefined }} parts={null} />
+      </MemoryRouter>,
+    );
+    expect(screen.queryByRole('link', { name: /Instruction manual/ })).toBeNull();
+    expect(screen.getByRole('link', { name: /Official product page/ })).toBeInTheDocument();
+  });
+
   it('links back to the product list', () => {
     renderDetail('BR-01');
     expect(screen.getByRole('link', { name: /All products/ })).toHaveAttribute(

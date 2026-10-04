@@ -39,3 +39,7 @@ export const Tool: Story = {
 export const Unmapped: Story = {
   args: { product: product('BR-01'), parts: null },
 };
+
+export const NoManual: Story = {
+  args: { product: { ...product('BR-01'), manualUrl: undefined }, parts: null },
+};
