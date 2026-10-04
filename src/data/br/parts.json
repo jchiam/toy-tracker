@@ -1,0 +1,68 @@
+[
+  {
+    "id": "cowl:storm-falcon",
+    "slot": "cowl",
+    "nameEn": "Storm Falcon",
+    "nameJa": "ストームファルコン"
+  },
+  {
+    "id": "cowl:lash-stallion",
+    "slot": "cowl",
+    "nameEn": "Lash Stallion",
+    "nameJa": "ラッシュスタリオン"
+  },
+  {
+    "id": "cowl:fury-lizard",
+    "slot": "cowl",
+    "nameEn": "Fury Lizard",
+    "nameJa": "フューリーリザード"
+  },
+  {
+    "id": "bumper:dual-blade",
+    "slot": "bumper",
+    "nameEn": "Dual Blade",
+    "nameJa": "デュアルブレード"
+  },
+  {
+    "id": "bumper:wide-shield",
+    "slot": "bumper",
+    "nameEn": "Wide Shield",
+    "nameJa": "ワイドシールド"
+  },
+  {
+    "id": "bumper:mega-launcher",
+    "slot": "bumper",
+    "nameEn": "Mega Launcher",
+    "nameJa": "メガランチャー"
+  },
+  {
+    "id": "tire:rw32",
+    "slot": "tire",
+    "nameEn": "RW32",
+    "nameJa": "RW32"
+  },
+  {
+    "id": "tire:lw32",
+    "slot": "tire",
+    "nameEn": "LW32",
+    "nameJa": "LW32"
+  },
+  {
+    "id": "tire:h36",
+    "slot": "tire",
+    "nameEn": "H36",
+    "nameJa": "H36"
+  },
+  {
+    "id": "tire:c36",
+    "slot": "tire",
+    "nameEn": "C36",
+    "nameJa": "C36"
+  },
+  {
+    "id": "chassis:alpha",
+    "slot": "chassis",
+    "nameEn": "Alpha",
+    "nameJa": "アルファ"
+  }
+]

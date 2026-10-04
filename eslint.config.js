@@ -52,5 +52,11 @@ export default [
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
+  {
+    // Node CLI scripts report progress on stdout.
+    files: ['scripts/**/*.ts'],
+    languageOptions: { globals: { ...globals.node } },
+    rules: { 'no-console': 'off' },
+  },
   eslintConfigPrettier,
 ];

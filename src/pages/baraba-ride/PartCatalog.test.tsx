@@ -1,0 +1,62 @@
+import { describe, it, expect, afterEach } from 'vitest';
+import { render, screen, cleanup, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { PartCatalog } from './PartCatalog';
+import { PARTS, PRODUCTS, PRODUCT_PARTS } from '@/lib/br/catalog';
+import type { Part } from '@/lib/br/types';
+
+function renderParts(parts: Part[] = PARTS) {
+  return render(
+    <MemoryRouter initialEntries={['/baraba-ride?view=parts']}>
+      <PartCatalog parts={parts} products={PRODUCTS} productParts={PRODUCT_PARTS} />
+    </MemoryRouter>,
+  );
+}
+
+afterEach(cleanup);
+
+describe('PartCatalog', () => {
+  it('groups parts under their slot headings', () => {
+    renderParts();
+    expect(
+      screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual(['Cowls', 'Bumpers', 'Tires', 'Chassis']);
+
+    const bumpers = screen.getByRole('region', { name: 'Bumpers' });
+    expect(
+      within(bumpers)
+        .getAllByRole('heading', { level: 3 })
+        .map((heading) => heading.textContent),
+    ).toEqual(['Dual Blade', 'Wide Shield', 'Mega Launcher']);
+  });
+
+  it('omits slots that have no parts', () => {
+    renderParts(PARTS.filter((p) => p.slot !== 'chassis'));
+    expect(screen.queryByRole('heading', { name: 'Chassis' })).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Tires' })).toBeInTheDocument();
+  });
+
+  it('lists the products containing a part, with quantities and links', () => {
+    renderParts();
+    const sources = screen.getByRole('list', { name: 'H36 found in' });
+    expect(
+      within(sources)
+        .getAllByRole('listitem')
+        .map((li) => li.textContent),
+    ).toEqual(['BR-02 Lash Stallion × 4', 'BR-05 Lash Stallion × 4', 'BR-07 Falcon Kit × 4']);
+    expect(within(sources).getByRole('link', { name: 'BR-07 Falcon Kit' })).toHaveAttribute(
+      'href',
+      '/baraba-ride?product=BR-07',
+    );
+  });
+
+  it('notes parts that no product mapping references', () => {
+    renderParts([
+      ...PARTS,
+      { id: 'bumper:prototype', slot: 'bumper', nameEn: 'Prototype', nameJa: 'プロトタイプ' },
+    ]);
+    const card = screen.getByRole('heading', { name: 'Prototype' }).closest('li')!;
+    expect(within(card).getByText('Source product unknown')).toBeInTheDocument();
+    expect(screen.getAllByText('Source product unknown')).toHaveLength(1);
+  });
+});

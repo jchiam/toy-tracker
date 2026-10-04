@@ -34,6 +34,7 @@ Dev server runs on http://127.0.0.1:5175 (5173 is reserved for game-tracker, 517
 | `npm run test:e2e`                | End-to-end tests (Playwright)                         |
 | `npm run lint` / `npm run format` | Lint / format                                         |
 | `npm run storybook`               | Component workshop on port 6006                       |
+| `npm run data:br`                 | Regenerate the Baraba Ride product catalog (manual)   |
 
 ## Structure
 
