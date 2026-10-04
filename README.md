@@ -36,6 +36,15 @@ Dev server runs on http://127.0.0.1:5175 (5173 is reserved for game-tracker, 517
 | `npm run storybook`               | Component workshop on port 6006                       |
 | `npm run data:br`                 | Regenerate the Baraba Ride product catalog (manual)   |
 
+## Baraba Ride images
+
+Product shots are served from the ImageKit CDN; no image file is stored in this repository.
+
+- `VITE_IMAGEKIT_URL_ENDPOINT` (in `.env.local` and the deploy environment) tells the app where to load images from. Without it, the catalog shows placeholders.
+- `IMAGEKIT_PRIVATE_KEY` (in `.env.local` only) lets `npm run data:br` upload shots. It must never be prefixed with `VITE_`.
+- `npm run data:br` skips shots already on the CDN. `npm run data:br -- --reupload` replaces them.
+- Part variant images are crop boxes into a product's breakdown shot, curated by hand in `src/data/br/product-parts.json`.
+
 ## Structure
 
 ```

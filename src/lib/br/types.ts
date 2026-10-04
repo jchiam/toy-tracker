@@ -28,6 +28,12 @@ export interface Product {
   releaseDate: string;
   /** Slot-level counts as printed on the product page. */
   contents: Partial<Record<ContentsKey, number>>;
+  /**
+   * Official shots in page order, as asset paths
+   * (`/assets/baraba-ride/products/BR-01/1.jpg`). The files live on the image
+   * CDN, not in the repository; resolve them through `src/lib/imagekit.ts`.
+   */
+  images: string[];
   /** Bandai item path segment, e.g. `01_21000`. Not ordered by product code. */
   sourceId: string;
   sourceUrl: string;
@@ -44,9 +50,33 @@ export interface Part {
   nameJa: string;
 }
 
+/** A region of a product shot, in source pixels. */
+export interface CropBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Where a variant is pictured: a region of one of its product's shots. */
+export interface VariantImage {
+  /** 1-based index into the product's `images`. */
+  shot: number;
+  /** The part's render only, never the prose beside it. */
+  crop: CropBox;
+}
+
+/** How a part looks in one product. Parts change colour and stickers between releases. */
+export interface PartVariant {
+  /** Short English colour label, read from the official shot. */
+  color: string;
+  image?: VariantImage;
+}
+
 export interface ProductPartQuantity {
   partId: string;
   quantity: number;
+  variant?: PartVariant;
 }
 
 /** Which named parts ship in one product. Hand-curated. */

@@ -39,17 +39,35 @@ test('parts view groups parts by slot and links to products', async ({ page }) =
   await expect(page.getByRole('heading', { name: 'Fury Lizard' })).toBeVisible();
 });
 
-test('catalog loads no images from outside the app origin', async ({ page }) => {
-  const foreignImages: string[] = [];
+test('catalog loads images only from the app origin and the image CDN', async ({ page }) => {
+  // The image CDN is only contacted when the server under test has
+  // VITE_IMAGEKIT_URL_ENDPOINT set (a reused dev server); CI runs without it.
+  const allowed = ['http://127.0.0.1:5175/', 'https://ik.imagekit.io/'];
+  const disallowed: string[] = [];
   page.on('request', (request) => {
-    if (request.resourceType() === 'image' && !request.url().startsWith('http://127.0.0.1:5175')) {
-      foreignImages.push(request.url());
+    const url = request.url();
+    if (request.resourceType() === 'image' && !allowed.some((origin) => url.startsWith(origin))) {
+      disallowed.push(url);
     }
   });
 
   await page.goto('/baraba-ride');
   await expect(page.getByRole('region', { name: 'Products' })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'BR-01 Storm Falcon' })).toBeVisible();
+
+  await page.goto('/baraba-ride?product=BR-01');
+  await expect(page.getByRole('list', { name: 'Product shots' }).getByRole('img')).toHaveCount(5);
+
   await page.goto('/baraba-ride?view=parts');
-  await expect(page.getByRole('region', { name: 'Parts' })).toBeVisible();
-  expect(foreignImages).toEqual([]);
+  const variants = page.getByRole('list', { name: 'Storm Falcon variants' });
+  await expect(variants).toBeVisible();
+
+  // With the image CDN configured the variants are real images; they must load.
+  // Without it (CI) they are placeholders and there is nothing to load.
+  for (const image of await variants.locator('img').all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toHaveJSProperty('complete', true);
+    expect(await image.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+  }
+  expect(disallowed).toEqual([]);
 });

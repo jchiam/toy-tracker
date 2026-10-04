@@ -12,7 +12,8 @@ import {
 } from './catalog.ts';
 
 // Fixtures are trimmed copies of the official pages: markup structure and
-// factual fields only, with description prose and image URLs removed.
+// factual fields only, with description prose removed. Shot elements keep their
+// source URL; the image files themselves are never stored.
 const fixture = (name: string) =>
   readFileSync(join(import.meta.dirname, '__fixtures__', name), 'utf8');
 
@@ -67,8 +68,33 @@ describe('parseItemJa', () => {
       price: { amount: 3300, currency: 'JPY', taxIncluded: true },
       releaseDate: '2026-09-19',
       contents: { cowl: 1, bumper: 1, tire: 4, chassis: 1, charger: 1, sticker: 1 },
+      shotUrls: [
+        'https://assets-toy.bandai.co.jp/toy/ja/product/2026/08/EbDfUCLV5ZWYSaaH/1000256148_1.jpg',
+        'https://assets-toy.bandai.co.jp/toy/ja/product/2026/08/aAeRSM1FDBOBSlIJ/1000256148_2.jpg',
+        'https://assets-toy.bandai.co.jp/toy/ja/product/2026/08/4B2FZcTfFyE5bkyC/1000256148_3.jpg',
+        'https://assets-toy.bandai.co.jp/toy/ja/product/2026/08/jlh1ahV7abUF4fZq/1000256148_4.jpg',
+        'https://assets-toy.bandai.co.jp/toy/ja/product/2026/08/zPkL5wswCYy8pqnb/1000256148_5.jpg',
+      ],
       manualUrl: 'https://toy.bandai.co.jp/manuals/pdf.php?id=2852278',
     });
+  });
+
+  it('reads the main gallery once, skipping the repeated thumbnail strip', () => {
+    expect(parseItemJa(fixture('item-br-01.ja.html'), 'BR-01').shotUrls).toHaveLength(5);
+    expect(parseItemJa(fixture('item-br-07.ja.html'), 'BR-07').shotUrls).toHaveLength(4);
+  });
+
+  it('fails naming the product and field when the page lists no shots', () => {
+    const html = fixture('item-br-01.ja.html').replace('main_itemImgGallery ', 'gallery ');
+    expect(() => parseItemJa(html, 'BR-01')).toThrow(/BR-01: cannot parse images/);
+  });
+
+  it('fails on a shot that is not on the official asset host', () => {
+    const html = fixture('item-br-01.ja.html').replace(
+      'https://assets-toy.bandai.co.jp/',
+      'https://example.com/',
+    );
+    expect(() => parseItemJa(html, 'BR-01')).toThrow(/BR-01: cannot parse images/);
   });
 
   it('parses a booster set, which has no chassis or charger', () => {
@@ -152,6 +178,12 @@ describe('buildProduct and serializeProducts', () => {
       price: { amount: 1540, currency: 'JPY', taxIncluded: true },
       releaseDate: '2026-09-19',
       contents: { cowl: 1, bumper: 1, tire: 4, sticker: 1 },
+      images: [
+        '/assets/baraba-ride/products/BR-07/1.jpg',
+        '/assets/baraba-ride/products/BR-07/2.jpg',
+        '/assets/baraba-ride/products/BR-07/3.jpg',
+        '/assets/baraba-ride/products/BR-07/4.jpg',
+      ],
       sourceId: '01_21004',
       sourceUrl: 'https://toy.bandai.co.jp/ja/item/01_21004/',
     });
@@ -164,6 +196,14 @@ describe('buildProduct and serializeProducts', () => {
 
     expect(build('BR-10')).not.toHaveProperty('manualUrl');
     expect(serializeProducts([build('BR-10')])).not.toContain('manualUrl');
+  });
+
+  it('records shots as asset paths and never persists the source URL', () => {
+    expect(build('BR-01').images).toHaveLength(5);
+    expect(build('BR-01').images[4]).toBe('/assets/baraba-ride/products/BR-01/5.jpg');
+    expect(serializeProducts([build('BR-01'), build('BR-07')])).not.toContain(
+      'assets-toy.bandai.co.jp',
+    );
   });
 
   it('serializes sorted by product code regardless of input order', () => {

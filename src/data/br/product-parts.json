@@ -4,45 +4,153 @@
     "parts": [
       {
         "partId": "cowl:storm-falcon",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 28,
+              "y": 398,
+              "w": 345,
+              "h": 345
+            }
+          }
+        }
       },
       {
         "partId": "bumper:dual-blade",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Red",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:rw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Red",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "tire:lw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Red",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Red",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
-    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires; the 2 + 2 split between RW32 and LW32 is assumed."
+    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
   },
   {
     "productCode": "BR-02",
     "parts": [
       {
         "partId": "cowl:lash-stallion",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 35,
+              "y": 420,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:wide-shield",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Blue",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:h36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "Blue",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Blue",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
@@ -52,19 +160,67 @@
     "parts": [
       {
         "partId": "cowl:fury-lizard",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Grey",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 35,
+              "y": 420,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:mega-launcher",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Green",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:c36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "Green",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Dark green",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
@@ -74,45 +230,153 @@
     "parts": [
       {
         "partId": "cowl:storm-falcon",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Red",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 28,
+              "y": 398,
+              "w": 345,
+              "h": 345
+            }
+          }
+        }
       },
       {
         "partId": "bumper:dual-blade",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:rw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "tire:lw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Indigo",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
-    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-01 with the same parts. The box lists 4 tires; the 2 + 2 split between RW32 and LW32 is assumed."
+    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-01 with the same parts. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
   },
   {
     "productCode": "BR-05",
     "parts": [
       {
         "partId": "cowl:lash-stallion",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Blue",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 35,
+              "y": 420,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:wide-shield",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:h36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Orange",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-02 with the same parts."
@@ -122,19 +386,67 @@
     "parts": [
       {
         "partId": "cowl:fury-lizard",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Green",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 35,
+              "y": 420,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:mega-launcher",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 40,
+              "y": 782,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       },
       {
         "partId": "tire:c36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 772,
+              "y": 780,
+              "w": 312,
+              "h": 312
+            }
+          }
+        }
       },
       {
         "partId": "chassis:alpha",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Purple",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 785,
+              "y": 435,
+              "w": 300,
+              "h": 300
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-03 with the same parts."
@@ -144,15 +456,51 @@
     "parts": [
       {
         "partId": "cowl:storm-falcon",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 480,
+              "y": 70,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:mega-launcher",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 483,
+              "y": 560,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       },
       {
         "partId": "tire:h36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "Silver",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 483,
+              "y": 1024,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
@@ -162,15 +510,51 @@
     "parts": [
       {
         "partId": "cowl:lash-stallion",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 470,
+              "y": 75,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:dual-blade",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 483,
+              "y": 563,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       },
       {
         "partId": "tire:c36",
-        "quantity": 4
+        "quantity": 4,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 480,
+              "y": 1024,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
@@ -180,21 +564,69 @@
     "parts": [
       {
         "partId": "cowl:fury-lizard",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "White",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 415,
+              "y": 120,
+              "w": 320,
+              "h": 320
+            }
+          }
+        }
       },
       {
         "partId": "bumper:wide-shield",
-        "quantity": 1
+        "quantity": 1,
+        "variant": {
+          "color": "Grey",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 433,
+              "y": 608,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       },
       {
         "partId": "tire:rw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 430,
+              "y": 1070,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       },
       {
         "partId": "tire:lw32",
-        "quantity": 2
+        "quantity": 2,
+        "variant": {
+          "color": "Black",
+          "image": {
+            "shot": 3,
+            "crop": {
+              "x": 430,
+              "y": 1070,
+              "w": 296,
+              "h": 296
+            }
+          }
+        }
       }
     ],
-    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires; the 2 + 2 split between RW32 and LW32 is assumed."
+    "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
   }
 ]

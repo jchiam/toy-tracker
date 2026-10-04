@@ -36,6 +36,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@fission-ai/openspec": "^1.8.0",
+    "@imagekit/nodejs": "^7.12.1",
     "@playwright/test": "^1.58.2",
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/react-vite": "^10.4.0",

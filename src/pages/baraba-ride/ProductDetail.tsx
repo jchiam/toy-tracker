@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import type { ContentsKey, Product } from '@/lib/br/types';
+import { variantShot } from '@/lib/br/catalog';
 import type { ResolvedPart } from '@/lib/br/catalog';
 import {
   CONTENTS_LABELS,
@@ -9,6 +10,8 @@ import {
   formatDate,
   formatPrice,
 } from '@/lib/br/labels';
+import { getProductShotUrl, getProductThumbnailUrl, getVariantImageUrl } from '@/lib/imagekit';
+import { CatalogImage } from './CatalogImage';
 
 interface ProductDetailProps {
   product: Product;
@@ -41,6 +44,29 @@ export function ProductDetail({ product, parts }: ProductDetailProps) {
         </div>
       </header>
 
+      {product.images.length > 0 && (
+        <ul className="br-gallery" aria-label="Product shots">
+          {product.images.map((path, i) => {
+            const alt = `${product.nameEn}, shot ${i + 1} of ${product.images.length}`;
+            const image = (
+              <CatalogImage className="br-shot" src={getProductThumbnailUrl(path)} alt={alt} />
+            );
+            const full = getProductShotUrl(path);
+            return (
+              <li key={path}>
+                {full ? (
+                  <a href={full} target="_blank" rel="noopener noreferrer">
+                    {image}
+                  </a>
+                ) : (
+                  image
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
       <dl className="br-facts">
         <div>
           <dt>Price</dt>
@@ -71,11 +97,25 @@ export function ProductDetail({ product, parts }: ProductDetailProps) {
             Named parts
           </h3>
           <ul className="br-list">
-            {parts.map(({ part, quantity }) => (
-              <li key={part.id}>
-                <span className="br-slot">{SLOT_LABELS[part.slot]}</span> {part.nameEn} × {quantity}
-              </li>
-            ))}
+            {parts.map(({ part, quantity, variant }) => {
+              const shot = variantShot(product, variant);
+              return (
+                <li key={part.id} className={variant ? 'br-named-part' : undefined}>
+                  {variant && (
+                    <CatalogImage
+                      className="br-variant-image"
+                      src={shot && getVariantImageUrl(shot.path, shot.crop)}
+                      alt={`${part.nameEn}, ${variant.color}`}
+                    />
+                  )}
+                  <span>
+                    <span className="br-slot">{SLOT_LABELS[part.slot]}</span> {part.nameEn} ×{' '}
+                    {quantity}
+                    {variant && <span className="br-variant-color"> · {variant.color}</span>}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

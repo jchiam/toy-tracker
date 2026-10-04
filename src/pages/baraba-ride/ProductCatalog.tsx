@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import type { Product, ProductType, Style } from '@/lib/br/types';
 import { STYLE_LABELS, TYPE_LABELS, formatDate, formatPrice } from '@/lib/br/labels';
+import { getProductThumbnailUrl } from '@/lib/imagekit';
+import { CatalogImage } from './CatalogImage';
 
 interface ProductCatalogProps {
   products: Product[];
@@ -64,6 +66,11 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
           {visible.map((product) => (
             <li key={product.code}>
               <Link to={{ search: `?product=${product.code}` }} className="br-product-card">
+                <CatalogImage
+                  className="br-product-image"
+                  src={product.images[0] ? getProductThumbnailUrl(product.images[0]) : null}
+                  alt={`${product.code} ${product.nameEn}`}
+                />
                 <span className="br-code">{product.code}</span>
                 <h2 className="br-product-name">{product.nameEn}</h2>
                 <div className="br-badges">
