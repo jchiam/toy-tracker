@@ -40,6 +40,14 @@ describe('GameSwitcher', () => {
     }
   });
 
+  it('keeps the game active on a path beneath its route', async () => {
+    const user = userEvent.setup();
+    const { container } = renderAt('/baraba-ride/catalog/parts');
+    expect(container.querySelector('.current-game-icon-img')).toHaveAttribute('src', GAMES[0].icon);
+    await user.click(screen.getByRole('button', { name: 'Switch Game' }));
+    expect(screen.getByRole('link', { name: new RegExp(GAMES[0].name) })).toHaveClass('active');
+  });
+
   it('navigates and closes when a game is selected', async () => {
     const user = userEvent.setup();
     renderAt('/somewhere-else');

@@ -8,7 +8,7 @@ const product = (code: string) => PRODUCTS.find((p) => p.code === code)!;
 
 function renderDetail(code: string, mapped = true) {
   return render(
-    <MemoryRouter initialEntries={[`/baraba-ride?product=${code}`]}>
+    <MemoryRouter initialEntries={[`/baraba-ride/catalog/products/${code}`]}>
       <ProductDetail product={product(code)} parts={mapped ? resolveProductParts(code) : null} />
     </MemoryRouter>,
   );
@@ -134,7 +134,7 @@ describe('ProductDetail', () => {
     renderDetail('BR-01');
     expect(screen.getByRole('link', { name: /All products/ })).toHaveAttribute(
       'href',
-      '/baraba-ride',
+      '/baraba-ride/catalog',
     );
   });
 });

@@ -7,7 +7,7 @@ import type { Part } from '@/lib/br/types';
 
 function renderParts(parts: Part[] = PARTS) {
   return render(
-    <MemoryRouter initialEntries={['/baraba-ride?view=parts']}>
+    <MemoryRouter initialEntries={['/baraba-ride/catalog/parts']}>
       <PartCatalog parts={parts} products={PRODUCTS} productParts={PRODUCT_PARTS} />
     </MemoryRouter>,
   );
@@ -49,7 +49,7 @@ describe('PartCatalog', () => {
     ).toEqual(['BR-02 Lash Stallion × 4', 'BR-05 Lash Stallion × 4', 'BR-07 Falcon Kit × 4']);
     expect(within(sources).getByRole('link', { name: 'BR-07 Falcon Kit' })).toHaveAttribute(
       'href',
-      '/baraba-ride?product=BR-07',
+      '/baraba-ride/catalog/products/BR-07',
     );
   });
 
@@ -80,7 +80,10 @@ describe('PartCatalog', () => {
   it('links a variant to the product it ships in', () => {
     renderParts();
     const variants = within(screen.getByRole('list', { name: 'Storm Falcon variants' }));
-    expect(variants.getAllByRole('link')[2]).toHaveAttribute('href', '/baraba-ride?product=BR-07');
+    expect(variants.getAllByRole('link')[2]).toHaveAttribute(
+      'href',
+      '/baraba-ride/catalog/products/BR-07',
+    );
   });
 
   it('uses the first variant as the image of the part itself', () => {

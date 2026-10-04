@@ -31,7 +31,7 @@ function App() {
           {GAMES.map((game) => (
             <Route
               key={game.id}
-              path={game.path}
+              path={`${game.path}/*`}
               element={
                 <game.Page
                   session={session}
