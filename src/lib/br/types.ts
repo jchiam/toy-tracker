@@ -31,6 +31,8 @@ export interface Product {
   /** Bandai item path segment, e.g. `01_21000`. Not ordered by product code. */
   sourceId: string;
   sourceUrl: string;
+  /** Official manual link, when the item page has one. Opens Bandai's interstitial page, not the PDF. */
+  manualUrl?: string;
 }
 
 /** One named part. Hand-curated. */

@@ -67,6 +67,7 @@ describe('parseItemJa', () => {
       price: { amount: 3300, currency: 'JPY', taxIncluded: true },
       releaseDate: '2026-09-19',
       contents: { cowl: 1, bumper: 1, tire: 4, chassis: 1, charger: 1, sticker: 1 },
+      manualUrl: 'https://toy.bandai.co.jp/manuals/pdf.php?id=2852278',
     });
   });
 
@@ -103,6 +104,18 @@ describe('parseItemJa', () => {
     expect(() => parseItemJa(fixture('item-br-07.ja.html'), 'BR-01')).toThrow(
       /BR-01: cannot parse code/,
     );
+  });
+
+  it('leaves the manual link off an item page that has none', () => {
+    expect(parseItemJa(fixture('item-br-10.ja.html'), 'BR-10')).not.toHaveProperty('manualUrl');
+  });
+
+  it('fails on a manual link that is not the official manual location', () => {
+    const html = fixture('item-br-01.ja.html').replace(
+      'https://toy.bandai.co.jp/manuals/pdf.php?id=2852278',
+      'https://example.com/manual.pdf',
+    );
+    expect(() => parseItemJa(html, 'BR-01')).toThrow(/BR-01: cannot parse manualUrl/);
   });
 });
 
@@ -142,6 +155,15 @@ describe('buildProduct and serializeProducts', () => {
       sourceId: '01_21004',
       sourceUrl: 'https://toy.bandai.co.jp/ja/item/01_21004/',
     });
+  });
+
+  it('puts the manual link last, and only on products that have one', () => {
+    const withManual = build('BR-01');
+    expect(withManual.manualUrl).toBe('https://toy.bandai.co.jp/manuals/pdf.php?id=2852278');
+    expect(Object.keys(withManual).at(-1)).toBe('manualUrl');
+
+    expect(build('BR-10')).not.toHaveProperty('manualUrl');
+    expect(serializeProducts([build('BR-10')])).not.toContain('manualUrl');
   });
 
   it('serializes sorted by product code regardless of input order', () => {
