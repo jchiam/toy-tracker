@@ -1,0 +1,42 @@
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* Shared action button variants — colour layers over the `.btn` chrome (index.css). */
+.secondary-action {
+  background: transparent;
+  border: 1px solid var(--color-ui-border);
+  color: var(--color-text-secondary);
+}
+
+.secondary-action:hover {
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+  background: var(--color-ui-interactive-hover);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.secondary-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.primary-action {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary),
+    color-mix(in srgb, var(--color-brand-primary) 86%, black)
+  );
+  border: 1px solid var(--color-brand-primary);
+  color: var(--color-text-on-primary);
+  font-weight: var(--typography-font-weight-semibold);
+}
+
+.primary-action:hover {
+  box-shadow: 0 0 20px var(--color-brand-primary-glow);
+  transform: translateY(-2px);
+  border-color: var(--color-brand-primary);
+}

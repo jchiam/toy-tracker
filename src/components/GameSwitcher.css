@@ -1,0 +1,162 @@
+.game-switcher {
+  position: relative;
+  margin-right: var(--spacing-md);
+}
+
+.switcher-trigger {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-3) var(--spacing-5);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  color: var(--color-text-primary);
+}
+
+.switcher-trigger:hover,
+.switcher-trigger.active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 10px var(--color-focus-glow);
+}
+
+.current-game-icon-container {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+}
+
+.current-game-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chevron {
+  font-size: var(--typography-font-size-sm);
+  opacity: 0.5;
+  transition: transform var(--transition-fast);
+}
+
+.switcher-trigger.active .chevron {
+  transform: rotate(180deg);
+}
+
+.switcher-dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-5));
+  left: 0;
+  width: 220px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-badge);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: var(--z-index-modal);
+  animation: slide-in-down var(--duration-fast) ease-out;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  padding: var(--spacing-6) var(--spacing-md);
+  font-size: var(--typography-font-size-xs);
+  font-weight: var(--typography-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-ui-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dropdown-list {
+  padding: var(--spacing-sm);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-6);
+  padding: var(--spacing-5) var(--spacing-6);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  border-radius: var(--border-radius-md);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+  position: relative;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.dropdown-item.active {
+  background: color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+}
+
+.game-icon-container {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+}
+
+.game-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Named `switcher-game-name` (not `game-name`) on purpose — the selection
+   page's `.game-name` in index.css is a 1.6rem gold-hover title; sharing the
+   class would let either rule set clobber the other depending on bundle
+   order. */
+.switcher-game-name {
+  font-size: var(--typography-font-size-base);
+  font-weight: var(--typography-font-weight-medium);
+}
+
+.active-indicator {
+  margin-left: auto;
+  font-size: var(--typography-font-size-xs);
+  color: var(--color-brand-primary);
+}
+
+.dropdown-footer {
+  padding: var(--spacing-sm);
+  border-top: 1px solid var(--color-ui-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  padding: var(--spacing-sm);
+  font-size: var(--typography-font-size-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--border-radius-md);
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.back-link:hover {
+  background: var(--color-ui-interactive-hover);
+  color: var(--color-text-primary);
+}

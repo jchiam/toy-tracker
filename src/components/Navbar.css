@@ -1,0 +1,78 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-ui-border);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  height: 40px;
+  width: auto;
+  margin-right: var(--spacing-sm);
+  /* The logo has a light background — mix-blend-mode lighten makes it
+     render cleanly against the dark navbar without a visible box. */
+  mix-blend-mode: lighten;
+  opacity: 0.92;
+}
+
+.nav-brand {
+  font-size: var(--typography-font-size-xl);
+  font-weight: var(--typography-font-weight-semibold);
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #fff, var(--color-text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  transition:
+    filter var(--transition-normal),
+    transform var(--transition-normal);
+  cursor: pointer;
+}
+
+.nav-brand:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+.nav-brand:active {
+  transform: translateY(0);
+}
+
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.user-email {
+  color: var(--color-text-secondary);
+  font-size: var(--typography-font-size-base);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+  .nav-auth {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

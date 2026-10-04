@@ -1,0 +1,11 @@
+dist
+node_modules
+.vercel
+package-lock.json
+public
+src/styles/tokens.css
+storybook-static
+.claude
+coverage
+test-results
+playwright-report

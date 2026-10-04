@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate OpenSpec specs and changes
+        run: npx openspec validate --all --json
+
+      - name: Check no active OpenSpec changes have incomplete tasks
+        shell: bash
+        run: |
+          FAILED=0
+          for change_dir in openspec/changes/*/; do
+            name=$(basename "$change_dir")
+            [ "$name" = "archive" ] && continue
+            tasks_file="${change_dir}tasks.md"
+            [ -f "$tasks_file" ] || continue
+            if grep -qF "- [ ]" "$tasks_file"; then
+              count=$(grep -cF "- [ ]" "$tasks_file")
+              echo "::error::Active change '$name' has $count incomplete task(s) — archive or complete before merging"
+              FAILED=1
+            fi
+          done
+          exit $FAILED
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint codebase
+        run: npm run lint
+
+      # Repository secret VITE_SUPABASE_URL (prod Supabase API URL). Unset → verify skips.
+      - name: Verify CSP connect-src matches Supabase URL
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: npm run verify:csp
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Verify production build
+        run: npm run build
+
+      - name: Security audit
+        run: npm audit
+
+  e2e-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Run Playwright tests
+        run: npm run test:e2e
+        env:
+          VITE_SUPABASE_URL: http://127.0.0.1:54321
+          VITE_SUPABASE_ANON_KEY: dummy_key
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

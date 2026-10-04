@@ -1,0 +1,136 @@
+{
+  "$description": "The JonZone Toy Zone design system — inherits game-tracker's Temper language: warm Ink/Slate/Porcelain neutrals with gold brand, plus per-toy-line accent gradients",
+  "color": {
+    "bg": {
+      "base": { "$value": "#0e1014", "$type": "color" },
+      "surface": { "$value": "rgba(26,30,38,0.7)", "$type": "color" },
+      "surfaceHover": { "$value": "rgba(38,44,56,0.8)", "$type": "color" },
+      "elevated": { "$value": "rgba(30,35,45,0.9)", "$type": "color" },
+      "selectionFade": { "$value": "#0a0a1a", "$type": "color" }
+    },
+    "text": {
+      "primary": { "$value": "#e9e4d8", "$type": "color" },
+      "secondary": { "$value": "#b3ad9e", "$type": "color" },
+      "dim": { "$value": "#9a9484", "$type": "color" },
+      "onPrimary": { "$value": "#000000", "$type": "color" }
+    },
+    "brand": {
+      "primary": { "$value": "#d4af37", "$type": "color" },
+      "primaryGlow": { "$value": "rgba(212,175,55,0.4)", "$type": "color" },
+      "primaryMuted": { "$value": "rgba(212,175,55,0.15)", "$type": "color" },
+      "accent": { "$value": "#8b5cf6", "$type": "color" }
+    },
+    "ui": {
+      "border": { "$value": "rgba(255,255,255,0.1)", "$type": "color" },
+      "borderStrong": { "$value": "rgba(255,255,255,0.2)", "$type": "color" },
+      "danger": { "$value": "#ff4d4f", "$type": "color" },
+      "dangerBg": { "$value": "rgba(255,77,79,0.1)", "$type": "color" },
+      "interactiveHover": { "$value": "rgba(255,255,255,0.05)", "$type": "color" }
+    },
+    "focusGlow": { "$value": "rgba(212,175,55,0.2)", "$type": "color" },
+    "br": {
+      "selStart": { "$value": "#2a0e0a", "$type": "color" },
+      "selMid": { "$value": "#8a2a12", "$type": "color" },
+      "accent": { "$value": "#ff5a1f", "$type": "color" }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "display": {
+        "$value": "'Bahnschrift', 'Avenir Next Condensed', 'Arial Narrow', system-ui, sans-serif",
+        "$type": "fontFamily"
+      },
+      "base": {
+        "$value": "'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif",
+        "$type": "fontFamily"
+      },
+      "data": {
+        "$value": "'Cascadia Mono', Consolas, 'SF Mono', 'Menlo', monospace",
+        "$type": "fontFamily"
+      }
+    },
+    "fontSize": {
+      "xs": { "$value": "0.7rem", "$type": "dimension" },
+      "sm": { "$value": "0.8rem", "$type": "dimension" },
+      "base": { "$value": "0.9rem", "$type": "dimension" },
+      "md": { "$value": "1rem", "$type": "dimension" },
+      "lg": { "$value": "1.1rem", "$type": "dimension" },
+      "xl": { "$value": "1.2rem", "$type": "dimension" },
+      "2xl": { "$value": "1.5rem", "$type": "dimension" },
+      "3xl": { "$value": "1.8rem", "$type": "dimension" },
+      "4xl": { "$value": "2.2rem", "$type": "dimension" },
+      "5xl": { "$value": "3rem", "$type": "dimension" },
+      "display": { "$value": "4rem", "$type": "dimension" }
+    },
+    "fontWeight": {
+      "normal": { "$value": 400, "$type": "fontWeight" },
+      "medium": { "$value": 500, "$type": "fontWeight" },
+      "semibold": { "$value": 600, "$type": "fontWeight" },
+      "bold": { "$value": 700, "$type": "fontWeight" },
+      "extrabold": { "$value": 800, "$type": "fontWeight" }
+    },
+    "lineHeight": {
+      "tight": { "$value": 1.3, "$type": "number" },
+      "base": { "$value": 1.4, "$type": "number" },
+      "relaxed": { "$value": 1.5, "$type": "number" },
+      "loose": { "$value": 1.6, "$type": "number" }
+    }
+  },
+  "spacing": {
+    "1": { "$value": "2px", "$type": "dimension" },
+    "2": { "$value": "4px", "$type": "dimension" },
+    "3": { "$value": "6px", "$type": "dimension" },
+    "5": { "$value": "10px", "$type": "dimension" },
+    "6": { "$value": "12px", "$type": "dimension" },
+    "xs": { "$value": "4px", "$type": "dimension" },
+    "sm": { "$value": "8px", "$type": "dimension" },
+    "md": { "$value": "16px", "$type": "dimension" },
+    "lg": { "$value": "24px", "$type": "dimension" },
+    "xl": { "$value": "32px", "$type": "dimension" },
+    "2xl": { "$value": "48px", "$type": "dimension" },
+    "3xl": { "$value": "64px", "$type": "dimension" }
+  },
+  "borderRadius": {
+    "xs": { "$value": "2px", "$type": "dimension" },
+    "sm": { "$value": "4px", "$type": "dimension" },
+    "md": { "$value": "8px", "$type": "dimension" },
+    "badge": { "$value": "10px", "$type": "dimension" },
+    "lg": { "$value": "16px", "$type": "dimension" },
+    "xl": { "$value": "20px", "$type": "dimension" },
+    "full": { "$value": "9999px", "$type": "dimension" }
+  },
+  "shadow": {
+    "sm": { "$value": "0 2px 8px rgba(0,0,0,0.3)", "$type": "shadow" },
+    "md": { "$value": "0 4px 12px rgba(0,0,0,0.3)", "$type": "shadow" },
+    "lg": { "$value": "0 10px 30px rgba(0,0,0,0.5)", "$type": "shadow" },
+    "xl": { "$value": "0 20px 50px rgba(0,0,0,0.5)", "$type": "shadow" },
+    "glowPrimary": { "$value": "0 0 15px rgba(212,175,55,0.4)", "$type": "shadow" },
+    "glowSm": { "$value": "0 0 8px rgba(212,175,55,0.4)", "$type": "shadow" },
+    "insetGlow": { "$value": "0 0 8px rgba(212,175,55,0.4) inset", "$type": "shadow" },
+    "cardHover": {
+      "$value": "0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(212,175,55,0.4)",
+      "$type": "shadow"
+    }
+  },
+  "zIndex": {
+    "base": { "$value": 0, "$type": "number" },
+    "card": { "$value": 1, "$type": "number" },
+    "overlay": { "$value": 2, "$type": "number" },
+    "controls": { "$value": 3, "$type": "number" },
+    "sticky": { "$value": 100, "$type": "number" },
+    "modal": { "$value": 1000, "$type": "number" },
+    "toast": { "$value": 9999, "$type": "number" }
+  },
+  "transition": {
+    "fast": { "$value": "0.15s ease", "$type": "duration" },
+    "normal": { "$value": "0.3s ease", "$type": "duration" },
+    "slow": { "$value": "0.5s ease", "$type": "duration" }
+  },
+  "duration": {
+    "instant": { "$value": "0.01ms", "$type": "duration" },
+    "fast": { "$value": "0.15s", "$type": "duration" },
+    "normal": { "$value": "0.3s", "$type": "duration" },
+    "slow": { "$value": "0.5s", "$type": "duration" },
+    "pulse": { "$value": "1.5s", "$type": "duration" }
+  }
+}

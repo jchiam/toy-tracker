@@ -1,0 +1,54 @@
+.selection-hero {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  animation: fade-in-down 0.6s ease-out;
+}
+
+.selection-title {
+  font-size: var(--typography-font-size-5xl);
+  font-weight: var(--typography-font-weight-extrabold);
+  margin-bottom: var(--spacing-sm);
+  background: linear-gradient(135deg, #fff, var(--color-brand-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #fff;
+}
+
+.selection-subtitle {
+  font-size: var(--typography-font-size-xl);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Widen past the 1200px .main-content shell so the grid can fit 3 columns
+   once the roster grows. Selection page only. */
+.selection-content {
+  max-width: 1400px;
+  padding: var(--spacing-xl);
+}
+
+.selection-grid {
+  display: grid;
+  gap: var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+  /* 480px max track keeps two cards from stretching across the full 1400px shell;
+     tracks stay card-shaped and the grid centers until the roster grows to 3. */
+  grid-template-columns: repeat(auto-fit, minmax(360px, 480px));
+  justify-content: center;
+}
+
+.selection-attribution {
+  text-align: center;
+  margin-top: var(--spacing-2xl);
+  color: var(--color-text-dim);
+  font-size: var(--typography-font-size-xs);
+  line-height: var(--typography-line-height-relaxed);
+}
+
+@media (max-width: 768px) {
+  .selection-title {
+    font-size: var(--typography-font-size-4xl);
+  }
+}
