@@ -91,6 +91,13 @@ describe('completeCatalog', () => {
     );
   });
 
+  it('reports products that have no part mapping', async () => {
+    const { options } = setup(true);
+    const unmapped = { ...products[0], code: 'BR-08' };
+    await completeCatalog({ ...options, products: [...products, unmapped] });
+    expect(options.log).toHaveBeenCalledWith('Products with no part mapping: BR-08');
+  });
+
   it('reports mapping entries that have no variant image', async () => {
     const { options } = setup(true);
     await completeCatalog(options);

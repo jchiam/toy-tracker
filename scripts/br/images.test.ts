@@ -5,6 +5,20 @@ import { join } from 'node:path';
 import { createImageStore, ensureAsset, publishShots, toImageKitLocation } from './images.ts';
 import type { ImageStore } from './images.ts';
 
+// The SDK is replaced so the store's own logic runs without touching the network.
+const sdk = vi.hoisted(() => ({ list: vi.fn(), upload: vi.fn() }));
+vi.mock('@imagekit/nodejs', () => ({
+  default: class {
+    assets = { list: sdk.list };
+    files = { upload: sdk.upload };
+  },
+  toFile: async (data: Buffer, name: string, options: { type: string }) => ({
+    data,
+    name,
+    type: options.type,
+  }),
+}));
+
 const SHOT = '/assets/baraba-ride/products/BR-01/3.jpg';
 
 function stubStore(present: boolean) {
@@ -35,6 +49,37 @@ describe('createImageStore', () => {
 
   it('is enabled by IMAGEKIT_PRIVATE_KEY', () => {
     expect(createImageStore({ IMAGEKIT_PRIVATE_KEY: 'private_example' })).not.toBeNull();
+  });
+
+  it('finds an asset by name in its folder, listing each folder once', async () => {
+    sdk.list.mockReset().mockResolvedValue([{ name: '3.jpg' }, { type: 'folder' }]);
+    const store = createImageStore({ IMAGEKIT_PRIVATE_KEY: 'private_example' })!;
+
+    expect(await store.exists(SHOT)).toBe(true);
+    expect(await store.exists('/assets/baraba-ride/products/BR-01/4.jpg')).toBe(false);
+    expect(sdk.list).toHaveBeenCalledTimes(1);
+    expect(sdk.list).toHaveBeenCalledWith({
+      path: '/baraba_ride/products/BR_01',
+      type: 'file',
+      limit: 100,
+    });
+
+    await store.exists('/assets/baraba-ride/products/BR-07/1.jpg');
+    expect(sdk.list).toHaveBeenCalledTimes(2);
+  });
+
+  it('uploads to the mapped folder under the exact file name', async () => {
+    sdk.upload.mockReset().mockResolvedValue({});
+    const data = Buffer.from('shot');
+    const store = createImageStore({ IMAGEKIT_PRIVATE_KEY: 'private_example' })!;
+
+    await store.upload(SHOT, data);
+    expect(sdk.upload).toHaveBeenCalledWith({
+      file: { data, name: '3.jpg', type: 'image/jpeg' },
+      fileName: '3.jpg',
+      folder: '/baraba_ride/products/BR_01',
+      useUniqueFileName: false,
+    });
   });
 });
 
