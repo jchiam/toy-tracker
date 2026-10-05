@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { countByStatus, groupInstancesByItem } from './inventory';
-import type { Instance, InstanceStatus } from './inventory-types';
+import { countByStatus, groupInstancesByItem, sortPurchases } from './inventory';
+import type { Instance, InstanceStatus, Purchase } from './inventory-types';
 
 let seq = 0;
 const instance = (itemId: string, status: InstanceStatus = 'active'): Instance => ({
@@ -71,5 +71,26 @@ describe('groupInstancesByItem', () => {
 
   it('is empty for no instances', () => {
     expect(groupInstancesByItem([])).toEqual([]);
+  });
+});
+
+describe('sortPurchases', () => {
+  const purchase = (id: string, acquiredAt: string, createdAt: string): Purchase => ({
+    id,
+    profileId: 'u',
+    productCode: 'BR-01',
+    acquiredAt,
+    note: '',
+    createdAt,
+  });
+
+  it('orders newest acquisition first, then newest record first, without mutating', () => {
+    const input = [
+      purchase('old', '2026-09-01', '2026-09-01T00:00:00Z'),
+      purchase('new-early', '2026-10-01', '2026-10-01T08:00:00Z'),
+      purchase('new-late', '2026-10-01', '2026-10-01T09:00:00Z'),
+    ];
+    expect(sortPurchases(input).map((p) => p.id)).toEqual(['new-late', 'new-early', 'old']);
+    expect(input.map((p) => p.id)).toEqual(['old', 'new-early', 'new-late']);
   });
 });

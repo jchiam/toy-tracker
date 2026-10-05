@@ -615,7 +615,7 @@ button.br-danger:hover {
 }
 
 .br-purchase-note {
-  margin: 0 0 var(--spacing-3);
+  font-size: var(--typography-font-size-sm);
   font-style: italic;
   color: var(--color-text-secondary);
 }

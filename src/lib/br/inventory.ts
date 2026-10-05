@@ -1,6 +1,6 @@
 import { resolveItem, type CatalogItem } from './catalog';
 import { ACCESSORY_KINDS, SLOTS, type AccessoryKind, type Slot } from './types';
-import type { Instance } from './inventory-types';
+import type { Instance, Purchase } from './inventory-types';
 
 export interface StatusCounts {
   active: number;
@@ -70,4 +70,11 @@ export function groupInstancesByItem(
       .sort((a, b) => displayName(a).localeCompare(displayName(b)));
     return members.length > 0 ? [{ key, groups: members }] : [];
   });
+}
+
+/** Newest acquisition first; ties broken by creation time, newest first. */
+export function sortPurchases(purchases: Purchase[]): Purchase[] {
+  return [...purchases].sort(
+    (a, b) => b.acquiredAt.localeCompare(a.acquiredAt) || b.createdAt.localeCompare(a.createdAt),
+  );
 }

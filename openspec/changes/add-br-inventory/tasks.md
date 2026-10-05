@@ -37,7 +37,7 @@
 
 ## 6. Purchases view
 
-- [ ] 6.1 Create `InventoryPurchases` (most recent acquisition first, product code and name, date, note, instance count, expand to `InstanceList`, delete with instance-count confirmation) plus story and unit tests for ordering, expansion, and delete confirmation text
+- [x] 6.1 Create `InventoryPurchases` (most recent acquisition first, product code and name, date, note, instance count, expand to `InstanceList`, delete with instance-count confirmation) plus story and unit tests for ordering, expansion, and delete confirmation text
 - [ ] 6.2 Verify in the dev app that a purchase deleted in Purchases disappears from Items without reload
 
 ## 7. Integration
