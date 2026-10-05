@@ -90,6 +90,44 @@ describe('useBrInventory', () => {
     expect(result.current.instances).toEqual([instance]);
   });
 
+  it('routes every other action through the service and reloads', async () => {
+    listPurchases.mockResolvedValue([]);
+    listInstances.mockResolvedValue([]);
+    const { result } = renderHook(() => useBrInventory('u'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    await act(() =>
+      result.current.actions.addInstances({ itemId: 'tire:rw32', variantProductCode: null }, 2),
+    );
+    await act(() => result.current.actions.setInstanceStatus('i1', 'retired', 'cracked'));
+    await act(() => result.current.actions.updateInstanceNote('i1', 'spare'));
+    await act(() => result.current.actions.deleteInstance('i1'));
+    await act(() => result.current.actions.deletePurchase('p1'));
+    await act(() => result.current.actions.reload());
+
+    expect(inventory.addInstances).toHaveBeenCalledWith(
+      'u',
+      { itemId: 'tire:rw32', variantProductCode: null },
+      2,
+    );
+    expect(inventory.setInstanceStatus).toHaveBeenCalledWith('i1', 'retired', 'cracked');
+    expect(inventory.updateInstanceNote).toHaveBeenCalledWith('i1', 'spare');
+    expect(inventory.deleteInstance).toHaveBeenCalledWith('i1');
+    expect(inventory.deletePurchase).toHaveBeenCalledWith('p1');
+    // initial load + one reload per action + explicit reload
+    expect(listInstances).toHaveBeenCalledTimes(7);
+  });
+
+  it('records the error when a reload after a write fails', async () => {
+    listPurchases.mockResolvedValueOnce([]).mockRejectedValueOnce(new Error('reload down'));
+    listInstances.mockResolvedValue([]);
+    const { result } = renderHook(() => useBrInventory('u'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    await act(() => result.current.actions.deleteInstance('i1'));
+    expect(result.current.error).toBe('reload down');
+  });
+
   it('keeps shown data and records the error when a write fails', async () => {
     listPurchases.mockResolvedValue([purchase]);
     listInstances.mockResolvedValue([instance]);

@@ -99,6 +99,14 @@ describe('InstanceList', () => {
     expect(actions.onDelete).toHaveBeenCalledWith('i1');
   });
 
+  it('cancels a delete without calling the action', async () => {
+    renderList([base]);
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(actions.onDelete).not.toHaveBeenCalled();
+    expect(screen.queryByRole('group', { name: 'Delete this item' })).toBeNull();
+  });
+
   it('keeps the confirmation open when the action fails', async () => {
     actions.onDelete.mockRejectedValueOnce(new Error('nope'));
     renderList([base]);

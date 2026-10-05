@@ -78,6 +78,42 @@ describe('InventoryPurchases', () => {
     expect(inventory.actions.deletePurchase).toHaveBeenCalledWith('p1');
   });
 
+  it('keeps the confirmation open when the delete fails', async () => {
+    const inventory = makeInventory(
+      { purchases: [makePurchase({ id: 'p1' })], instances: [makeInstance({ purchaseId: 'p1' })] },
+      spy,
+    );
+    vi.mocked(inventory.actions.deletePurchase).mockRejectedValueOnce(new Error('nope'));
+    render(<InventoryPurchases inventory={inventory} />);
+    await userEvent.click(screen.getByText('Storm Falcon'));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete purchase' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(screen.getByRole('group', { name: 'Delete this purchase' })).toBeInTheDocument();
+  });
+
+  it('retires and deletes a linked instance from the purchase view', async () => {
+    const inventory = makeInventory(
+      {
+        purchases: [makePurchase({ id: 'p1' })],
+        instances: [
+          makeInstance({ id: 'a', purchaseId: 'p1' }),
+          makeInstance({ id: 'b', purchaseId: 'p1', status: 'retired' }),
+        ],
+      },
+      spy,
+    );
+    render(<InventoryPurchases inventory={inventory} />);
+    await userEvent.click(screen.getByText('Storm Falcon'));
+    await userEvent.click(screen.getByRole('button', { name: 'Retire' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm retire' }));
+    expect(inventory.actions.setInstanceStatus).toHaveBeenCalledWith('a', 'retired', undefined);
+    await userEvent.click(screen.getByRole('button', { name: 'Reactivate' }));
+    expect(inventory.actions.setInstanceStatus).toHaveBeenCalledWith('b', 'active');
+    await userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(inventory.actions.deleteInstance).toHaveBeenCalledWith('a');
+  });
+
   it('cancels a purchase delete', async () => {
     const inventory = makeInventory(
       { purchases: [makePurchase({ id: 'p1' })], instances: [makeInstance({ purchaseId: 'p1' })] },
