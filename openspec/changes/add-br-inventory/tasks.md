@@ -16,10 +16,10 @@
 
 ## 3. Data access
 
-- [ ] 3.1 Add `src/lib/br/inventory-types.ts` (`Purchase`, `Instance`, `InstanceStatus`, `Condition`) and `src/services/profile.ts` with `ensureProfile`; unit test with an MSW handler that the upsert is sent with `ignoreDuplicates`
-- [ ] 3.2 Add `src/services/br/inventory.ts` with `listPurchases`, `listInstances`, `recordPurchase` (compensating delete on instance insert failure), `addInstances`, `setInstanceStatus`, `updateInstanceNote`, `deleteInstance`, `deletePurchase`; unit test each against MSW handlers, including the compensating delete path
-- [ ] 3.3 Add pure helpers `groupInstancesByItem` and `countByStatus` to `src/lib/br/inventory.ts` with unit tests covering unknown ids, retired counts, and slot/kind grouping order
-- [ ] 3.4 Add `src/hooks/useBrInventory.ts` (load on mount for the session user, actions that call the service then refetch, loading and error state) with hook tests for load success, load failure, and a write followed by refetch
+- [x] 3.1 Add `src/lib/br/inventory-types.ts` (`Purchase`, `Instance`, `InstanceStatus`, `Condition`) and `src/services/profile.ts` with `ensureProfile`; unit test with an MSW handler that the upsert is sent with `ignoreDuplicates`
+- [x] 3.2 Add `src/services/br/inventory.ts` with `listPurchases`, `listInstances`, `recordPurchase` (compensating delete on instance insert failure), `addInstances`, `setInstanceStatus`, `updateInstanceNote`, `deleteInstance`, `deletePurchase`; unit test each against MSW handlers, including the compensating delete path
+- [x] 3.3 Add pure helpers `groupInstancesByItem` and `countByStatus` to `src/lib/br/inventory.ts` with unit tests covering unknown ids, retired counts, and slot/kind grouping order
+- [x] 3.4 Add `src/hooks/useBrInventory.ts` (load on mount for the session user, actions that call the service then refetch, loading and error state) with hook tests for load success, load failure, and a write followed by refetch
 
 ## 4. Routes and segment shell
 
