@@ -7,7 +7,7 @@ import { PRODUCTS } from '@/lib/br/catalog';
 
 function renderCatalog() {
   return render(
-    <MemoryRouter initialEntries={['/baraba-ride']}>
+    <MemoryRouter initialEntries={['/baraba-ride/catalog']}>
       <ProductCatalog products={PRODUCTS} />
     </MemoryRouter>,
   );
@@ -49,7 +49,7 @@ describe('ProductCatalog', () => {
     expect(within(card).getByText('Spin')).toBeInTheDocument();
     expect(within(card).getByText('¥1,540 incl. tax')).toBeInTheDocument();
     expect(within(card).getByText('Sep 19, 2026')).toBeInTheDocument();
-    expect(card).toHaveAttribute('href', '/baraba-ride?product=BR-07');
+    expect(card).toHaveAttribute('href', '/baraba-ride/catalog/products/BR-07');
   });
 
   it('lists a tool without a style badge', () => {

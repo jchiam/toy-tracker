@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import type { Product, ProductType, Style } from '@/lib/br/types';
 import { STYLE_LABELS, TYPE_LABELS, formatDate, formatPrice } from '@/lib/br/labels';
+import { brRoutes } from '@/lib/br/routes';
 import { getProductThumbnailUrl } from '@/lib/imagekit';
 import { CatalogImage } from './CatalogImage';
 
@@ -65,7 +66,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
         <ul className="br-product-grid">
           {visible.map((product) => (
             <li key={product.code}>
-              <Link to={{ search: `?product=${product.code}` }} className="br-product-card">
+              <Link to={brRoutes.product(product.code)} className="br-product-card">
                 <CatalogImage
                   className="br-product-image"
                   src={product.images[0] ? getProductThumbnailUrl(product.images[0]) : null}

@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test('catalog lists the launch lineup and filters by style', async ({ page }) => {
   await page.goto('/baraba-ride');
+  await expect(page).toHaveURL('/baraba-ride/catalog');
   const products = page.getByRole('region', { name: 'Products' });
   await expect(products.getByRole('link')).toHaveCount(10);
   await expect(products.getByRole('heading', { name: 'Fold Colosseum' })).toBeVisible();
@@ -16,27 +17,86 @@ test('catalog lists the launch lineup and filters by style', async ({ page }) =>
 });
 
 test('product detail shows named parts', async ({ page }) => {
-  await page.goto('/baraba-ride');
+  await page.goto('/baraba-ride/catalog');
   await page.getByRole('link', { name: /BR-07/ }).click();
-  await expect(page).toHaveURL('/baraba-ride?product=BR-07');
+  await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-07');
   await expect(page.getByRole('heading', { name: 'Falcon Kit' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Named parts' })).toContainText('Mega Launcher');
 
   await page.getByRole('link', { name: /All products/ }).click();
-  await expect(page).toHaveURL('/baraba-ride');
+  await expect(page).toHaveURL('/baraba-ride/catalog');
 });
 
 test('parts view groups parts by slot and links to products', async ({ page }) => {
-  await page.goto('/baraba-ride');
+  await page.goto('/baraba-ride/catalog');
   await page.getByRole('link', { name: 'Parts', exact: true }).click();
-  await expect(page).toHaveURL('/baraba-ride?view=parts');
+  await expect(page).toHaveURL('/baraba-ride/catalog/parts');
   await expect(page.getByRole('heading', { name: 'Bumpers' })).toBeVisible();
 
   await page
     .getByRole('list', { name: 'Alpha found in' })
     .getByRole('link', { name: 'BR-03 Fury Lizard' })
     .click();
+  await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-03');
   await expect(page.getByRole('heading', { name: 'Fury Lizard' })).toBeVisible();
+});
+
+test('segment navigation switches between Catalog, Inventory and Builds', async ({ page }) => {
+  await page.goto('/baraba-ride/catalog');
+  const segments = page.getByRole('navigation', { name: 'Segments' });
+  await expect(segments.getByRole('link', { name: 'Catalog' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+
+  await segments.getByRole('link', { name: 'Inventory' }).click();
+  await expect(page).toHaveURL('/baraba-ride/inventory');
+  await expect(page.getByRole('heading', { name: 'Inventory' })).toBeVisible();
+  await expect(page.getByText('Inventory is not available yet.')).toBeVisible();
+
+  await segments.getByRole('link', { name: 'Builds' }).click();
+  await expect(page).toHaveURL('/baraba-ride/builds');
+  await expect(page.getByRole('heading', { name: 'Builds' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Catalog views' })).toHaveCount(0);
+
+  await page.goBack();
+  await expect(page).toHaveURL('/baraba-ride/inventory');
+  await page.goBack();
+  await expect(page).toHaveURL('/baraba-ride/catalog');
+  await expect(page.getByRole('region', { name: 'Products' })).toBeVisible();
+});
+
+test('earlier query-string links reach their new addresses', async ({ page }) => {
+  await page.goto('/baraba-ride?product=BR-01');
+  await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-01');
+  await expect(page.getByRole('heading', { name: 'Storm Falcon' })).toBeVisible();
+
+  await page.goto('/baraba-ride?view=parts');
+  await expect(page).toHaveURL('/baraba-ride/catalog/parts');
+  await expect(page.getByRole('heading', { name: 'Bumpers' })).toBeVisible();
+});
+
+test('default redirects replace the history entry', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Baraba Ride/ }).click();
+  await expect(page).toHaveURL('/baraba-ride/catalog');
+  await page.goBack();
+  await expect(page).toHaveURL('/');
+
+  await page.goto('/baraba-ride/nowhere');
+  await expect(page).toHaveURL('/baraba-ride/catalog');
+  await expect(page.getByRole('region', { name: 'Products' })).toBeVisible();
+});
+
+test('navigation rows fit a phone-width viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 700 });
+  await page.goto('/baraba-ride/catalog');
+  await expect(page.getByRole('navigation', { name: 'Segments' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Catalog views' })).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
 });
 
 test('catalog loads images only from the app origin and the image CDN', async ({ page }) => {
@@ -51,14 +111,14 @@ test('catalog loads images only from the app origin and the image CDN', async ({
     }
   });
 
-  await page.goto('/baraba-ride');
+  await page.goto('/baraba-ride/catalog');
   await expect(page.getByRole('region', { name: 'Products' })).toBeVisible();
   await expect(page.getByRole('img', { name: 'BR-01 Storm Falcon' })).toBeVisible();
 
-  await page.goto('/baraba-ride?product=BR-01');
+  await page.goto('/baraba-ride/catalog/products/BR-01');
   await expect(page.getByRole('list', { name: 'Product shots' }).getByRole('img')).toHaveCount(5);
 
-  await page.goto('/baraba-ride?view=parts');
+  await page.goto('/baraba-ride/catalog/parts');
   const variants = page.getByRole('list', { name: 'Storm Falcon variants' });
   await expect(variants).toBeVisible();
 

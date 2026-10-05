@@ -10,6 +10,7 @@ import {
   formatDate,
   formatPrice,
 } from '@/lib/br/labels';
+import { brRoutes } from '@/lib/br/routes';
 import { getProductShotUrl, getProductThumbnailUrl, getVariantImageUrl } from '@/lib/imagekit';
 import { CatalogImage } from './CatalogImage';
 
@@ -24,7 +25,7 @@ export function ProductDetail({ product, parts }: ProductDetailProps) {
 
   return (
     <article className="br-detail" aria-labelledby="br-detail-title">
-      <Link to={{ search: '' }} className="br-back-link">
+      <Link to={brRoutes.catalog} className="br-back-link">
         ← All products
       </Link>
 

@@ -3,6 +3,7 @@ import type { Part, Product, ProductParts } from '@/lib/br/types';
 import { SLOTS } from '@/lib/br/types';
 import { findPartSources, findPartVariants, variantShot } from '@/lib/br/catalog';
 import { SLOT_HEADINGS, SLOT_LABELS } from '@/lib/br/labels';
+import { brRoutes } from '@/lib/br/routes';
 import { getVariantImageUrl } from '@/lib/imagekit';
 import { CatalogImage } from './CatalogImage';
 
@@ -56,7 +57,7 @@ export function PartCatalog({ parts, products, productParts }: PartCatalogProps)
                     <ul className="br-variant-strip" aria-label={`${part.nameEn} variants`}>
                       {variants.map(({ product, variant, src }) => (
                         <li key={product.code}>
-                          <Link to={{ search: `?product=${product.code}` }} className="br-variant">
+                          <Link to={brRoutes.product(product.code)} className="br-variant">
                             <CatalogImage
                               className="br-variant-image"
                               src={src}
@@ -75,7 +76,7 @@ export function PartCatalog({ parts, products, productParts }: PartCatalogProps)
                     <ul className="br-list br-source-list" aria-label={`${part.nameEn} found in`}>
                       {sources.map(({ product, quantity }) => (
                         <li key={product.code}>
-                          <Link to={{ search: `?product=${product.code}` }}>
+                          <Link to={brRoutes.product(product.code)}>
                             {product.code} {product.nameEn}
                           </Link>{' '}
                           × {quantity}
