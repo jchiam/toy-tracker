@@ -33,12 +33,12 @@
 - [x] 5.2 Create `InventoryItems` (grouped by slot then accessory kind, active and retired counts, empty state with calls to action, loading and error states) plus story and unit tests for grouping, counts, empty, loading, and error
 - [x] 5.3 Create `RecordPurchaseDialog` (mapped products only, acquisition date defaulting to today, note) and wire it to `recordPurchase`; unit test that an unmapped product is not offered and that BR-10 expands to one colosseum instance
 - [x] 5.4 Create `AddItemsDialog` (parts by slot then accessories by kind, quantity, optional source product from the item's sources, "unknown") and wire it to `addInstances`; unit test quantity expansion and empty source
-- [ ] 5.5 Verify in the dev app that recording a purchase from Items shows its instances without reload
+- [x] 5.5 Verify in the dev app that recording a purchase from Items shows its instances without reload
 
 ## 6. Purchases view
 
 - [x] 6.1 Create `InventoryPurchases` (most recent acquisition first, product code and name, date, note, instance count, expand to `InstanceList`, delete with instance-count confirmation) plus story and unit tests for ordering, expansion, and delete confirmation text
-- [ ] 6.2 Verify in the dev app that a purchase deleted in Purchases disappears from Items without reload
+- [x] 6.2 Verify in the dev app that a purchase deleted in Purchases disappears from Items without reload
 
 ## 7. Integration
 
