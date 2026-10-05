@@ -11,8 +11,8 @@
 
 ## 2. Database
 
-- [ ] 2.1 Write `supabase/migrations/<timestamp>_add_br_inventory.sql` creating `br_purchases` and `br_instances` per design D4 with indexes, RLS enabled, and four owner-scoped policies per table; verify it applies cleanly with `npm run db:push` against the dev project
-- [ ] 2.2 Review the policies side by side with `user_profiles` and confirm, via the Supabase SQL editor as a second user, that foreign rows are neither readable nor writable
+- [x] 2.1 Write `supabase/migrations/<timestamp>_add_br_inventory.sql` creating `br_purchases` and `br_instances` per design D4 with indexes, RLS enabled, and four owner-scoped policies per table; verify it applies cleanly with `npm run db:push` against the dev project
+- [x] 2.2 Review the policies side by side with `user_profiles` and confirm, via the Supabase SQL editor as a second user, that foreign rows are neither readable nor writable
 
 ## 3. Data access
 
