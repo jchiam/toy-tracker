@@ -2,6 +2,9 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { InventoryPurchases } from './InventoryPurchases';
+import { MemoryRouter } from 'react-router';
+import { claims } from '@/lib/br/builds';
+import { claim, makeBuild } from '@/test/br-builds';
 import { makeInstance, makeInventory, makePurchase } from '@/test/br-inventory';
 
 afterEach(cleanup);
@@ -148,5 +151,65 @@ describe('InventoryPurchases', () => {
     render(<InventoryPurchases inventory={makeInventory()} />);
     await userEvent.click(screen.getByRole('button', { name: 'Record purchase' }));
     expect(screen.getByRole('dialog', { name: 'Record a purchase' })).toBeInTheDocument();
+  });
+});
+
+describe('InventoryPurchases with build claims', () => {
+  it('refuses to delete a purchase whose items are in builds, naming every build', async () => {
+    const cowl = makeInstance({ id: 'cowl', purchaseId: 'p1', itemId: 'cowl:storm-falcon' });
+    const chassis = makeInstance({ id: 'chassis', purchaseId: 'p1', itemId: 'chassis:alpha' });
+    const inventory = makeInventory(
+      {
+        purchases: [makePurchase({ id: 'p1', productCode: 'BR-01' })],
+        instances: [cowl, chassis, makeInstance({ purchaseId: 'p1', itemId: 'tire:rw32' })],
+      },
+      spy,
+    );
+    const held = claims([
+      makeBuild({ name: 'Red Dash', status: 'built', parts: [claim('cowl', cowl)] }),
+      makeBuild({ name: 'Blue Spin', status: 'built', parts: [claim('chassis', chassis)] }),
+    ]);
+    render(
+      <MemoryRouter>
+        <InventoryPurchases inventory={inventory} claims={held} />
+      </MemoryRouter>,
+    );
+
+    await userEvent.click(screen.getByText('BR-01'));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete purchase' }));
+    const message = within(screen.getByRole('group', { name: 'Purchase cannot be deleted' }));
+    expect(message.getByText(/in use by “Red Dash”, “Blue Spin”/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Confirm delete' })).toBeNull();
+    expect(inventory.actions.deletePurchase).not.toHaveBeenCalled();
+
+    await userEvent.click(message.getByRole('button', { name: 'Close' }));
+    expect(screen.getByRole('button', { name: 'Delete purchase' })).toBeInTheDocument();
+  });
+
+  it('still deletes a purchase none of whose items is in a build', async () => {
+    const elsewhere = makeInstance({ id: 'other', purchaseId: null, itemId: 'chassis:alpha' });
+    const inventory = makeInventory(
+      {
+        purchases: [makePurchase({ id: 'p1', productCode: 'BR-01' })],
+        instances: [
+          elsewhere,
+          makeInstance({ purchaseId: 'p1', itemId: 'cowl:storm-falcon' }),
+          makeInstance({ purchaseId: 'p1', itemId: 'tire:rw32' }),
+        ],
+      },
+      spy,
+    );
+    const held = claims([makeBuild({ status: 'built', parts: [claim('chassis', elsewhere)] })]);
+    render(
+      <MemoryRouter>
+        <InventoryPurchases inventory={inventory} claims={held} />
+      </MemoryRouter>,
+    );
+
+    await userEvent.click(screen.getByText('BR-01'));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete purchase' }));
+    expect(screen.getByText(/Delete this purchase and its 2 items\?/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(inventory.actions.deletePurchase).toHaveBeenCalledWith('p1');
   });
 });

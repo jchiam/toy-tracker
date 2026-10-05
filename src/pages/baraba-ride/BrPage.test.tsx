@@ -5,6 +5,7 @@ import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
 import type { Session } from '@supabase/supabase-js';
 import { BrPage } from './BrPage';
 import type { BrInventory } from '@/hooks/useBrInventory';
+import type { BrBuilds } from '@/hooks/useBrBuilds';
 
 // The inventory segment loads user data through this hook; the page tests
 // only exercise navigation, so it resolves to an empty, loaded inventory.
@@ -21,6 +22,38 @@ vi.mock('@/hooks/useBrInventory', () => ({
       updateInstanceNote: vi.fn(),
       deleteInstance: vi.fn(),
       deletePurchase: vi.fn(),
+      reload: vi.fn(),
+    },
+  }),
+}));
+
+// The Builds and Inventory segments load builds through this hook; it resolves
+// to one loaded plan so a build can be opened by its address.
+vi.mock('@/hooks/useBrBuilds', () => ({
+  useBrBuilds: (): BrBuilds => ({
+    builds: [
+      {
+        id: 'b1',
+        profileId: 'test-user-123',
+        name: 'Red Dash',
+        status: 'plan',
+        note: '',
+        createdAt: '2026-10-01T00:00:00Z',
+        updatedAt: '2026-10-01T00:00:00Z',
+        parts: [],
+      },
+    ],
+    loading: false,
+    error: null,
+    actions: {
+      createBuild: vi.fn(),
+      updateBuild: vi.fn(),
+      deleteBuild: vi.fn(),
+      setPlanPositions: vi.fn(),
+      clearPlanPosition: vi.fn(),
+      swapBuiltPosition: vi.fn(),
+      markBuilt: vi.fn(),
+      takeApart: vi.fn(),
       reload: vi.fn(),
     },
   }),
@@ -129,10 +162,38 @@ describe('BrPage', () => {
       );
     });
 
-    it('shows the Builds placeholder at its own address', () => {
+    it('shows the builds list at the Builds address', () => {
       renderAt('/baraba-ride/builds');
       expect(screen.getByRole('heading', { level: 2, name: 'Builds' })).toBeInTheDocument();
-      expect(screen.getByText(/Builds is not available yet\./)).toBeInTheDocument();
+      expect(screen.queryByText(/not available yet/)).toBeNull();
+      expect(
+        within(screen.getByRole('list', { name: 'Builds' })).getByRole('link', {
+          name: 'Red Dash',
+        }),
+      ).toHaveAttribute('href', '/baraba-ride/builds/b1');
+    });
+
+    it('shows a build opened by its address, with Builds current', () => {
+      renderAt('/baraba-ride/builds/b1');
+      expect(screen.getByRole('heading', { level: 2, name: /Red Dash/ })).toBeInTheDocument();
+      expect(screen.getByRole('group', { name: 'Positions' })).toBeInTheDocument();
+      expect(segments().getByRole('link', { name: 'Builds' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+    });
+
+    it('says so and shows the list when no build has the address', () => {
+      renderAt('/baraba-ride/builds/nope');
+      expect(screen.getByText('No build with that address.')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: 'Builds' })).toBeInTheDocument();
+      expect(location()).toBe('/baraba-ride/builds/nope');
+    });
+
+    it('leads any deeper builds path back to the list', () => {
+      renderAt('/baraba-ride/builds/x/y');
+      expect(location()).toBe('/baraba-ride/builds');
+      expect(screen.getByRole('heading', { level: 2, name: 'Builds' })).toBeInTheDocument();
     });
 
     it.each(['/baraba-ride/inventory', '/baraba-ride/builds'])(

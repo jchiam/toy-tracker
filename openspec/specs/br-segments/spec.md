@@ -115,20 +115,6 @@ Every Baraba Ride segment URL SHALL be subject to the same sign-in gate as the B
 - **WHEN** a signed-out user opens `/baraba-ride`
 - **THEN** the sign-in gate is shown and the address stays `/baraba-ride`
 
-### Requirement: Builds segment shows a placeholder
-
-Until its features exist, the Builds segment SHALL show a heading naming the segment and a message that the segment is not available yet. It SHALL NOT read or store any user data.
-
-#### Scenario: Builds placeholder
-
-- **WHEN** a signed-in user opens `/baraba-ride/builds`
-- **THEN** a heading "Builds" and a not-available-yet message are shown
-
-#### Scenario: No data requests
-
-- **WHEN** the Builds placeholder is shown
-- **THEN** the page makes no request for user data
-
 ### Requirement: Inventory offers Items and Purchases views
 
 Within the Inventory segment the page SHALL show a sub-navigation offering Items and Purchases and SHALL indicate the current one. Items SHALL be served at `/baraba-ride/inventory` and Purchases at `/baraba-ride/inventory/purchases`. The sub-navigation SHALL NOT appear in other segments.

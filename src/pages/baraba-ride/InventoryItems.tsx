@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { BrInventory } from '@/hooks/useBrInventory';
+import type { Build } from '@/lib/br/build-types';
+import { countInBuilds } from '@/lib/br/builds';
 import { groupInstancesByItem, type ItemGroup, type ItemSection } from '@/lib/br/inventory';
 import { ACCESSORY_KIND_HEADINGS, SLOT_HEADINGS } from '@/lib/br/labels';
 import { ACCESSORY_KINDS, SLOTS, type AccessoryKind, type Slot } from '@/lib/br/types';
@@ -9,6 +11,8 @@ import { AddItemsDialog } from './AddItemsDialog';
 
 interface InventoryItemsProps {
   inventory: BrInventory;
+  /** The build holding each claimed instance. */
+  claims?: Map<string, Build>;
 }
 
 function sectionHeading(key: ItemSection['key']): string {
@@ -33,7 +37,7 @@ function groupNameJa(group: ItemGroup): string | null {
 type Dialog = 'purchase' | 'add' | null;
 
 /** Items view: every catalogued item the user owns, grouped, with its instances. */
-export function InventoryItems({ inventory }: InventoryItemsProps) {
+export function InventoryItems({ inventory, claims }: InventoryItemsProps) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const { purchases, instances, loading, error, actions } = inventory;
   const sections = groupInstancesByItem(instances);
@@ -84,6 +88,7 @@ export function InventoryItems({ inventory }: InventoryItemsProps) {
             {section.groups.map((group) => {
               const name = groupName(group);
               const nameJa = groupNameJa(group);
+              const inBuilds = claims ? countInBuilds(group.instances, claims) : 0;
               return (
                 <li key={group.itemId}>
                   <details className="br-item-group">
@@ -96,6 +101,14 @@ export function InventoryItems({ inventory }: InventoryItemsProps) {
                       )}
                       <span className="br-item-counts">
                         <span className="br-count-active">{group.counts.active} active</span>
+                        {inBuilds > 0 && (
+                          <>
+                            <span className="br-count-in-builds">{inBuilds} in builds</span>
+                            <span className="br-count-free">
+                              {group.counts.active - inBuilds} free
+                            </span>
+                          </>
+                        )}
                         {group.counts.retired > 0 && (
                           <span className="br-count-retired">{group.counts.retired} retired</span>
                         )}
@@ -105,6 +118,7 @@ export function InventoryItems({ inventory }: InventoryItemsProps) {
                       instances={group.instances}
                       purchases={purchases}
                       actions={listActions}
+                      claims={claims}
                       label={`${name} instances`}
                     />
                   </details>

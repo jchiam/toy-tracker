@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
+import type { Build } from '@/lib/br/build-types';
 import type { Instance, Purchase } from '@/lib/br/inventory-types';
 import type { Product } from '@/lib/br/types';
 import { PRODUCTS } from '@/lib/br/catalog';
 import { formatDate } from '@/lib/br/labels';
+import { brRoutes } from '@/lib/br/routes';
 
 export interface InstanceListActions {
   onRetire: (instanceId: string, note: string) => Promise<void>;
@@ -16,9 +19,13 @@ interface InstanceListProps {
   purchases?: Purchase[];
   products?: Product[];
   actions: InstanceListActions;
+  /** The build holding each claimed instance; a held instance cannot be retired or deleted. */
+  claims?: Map<string, Build>;
   /** Accessible name for the list. */
   label: string;
 }
+
+const NO_CLAIMS = new Map<string, Build>();
 
 type Pending = { id: string; kind: 'retire' | 'delete' } | null;
 
@@ -34,6 +41,7 @@ export function InstanceList({
   purchases = [],
   products = PRODUCTS,
   actions,
+  claims = NO_CLAIMS,
   label,
 }: InstanceListProps) {
   const [pending, setPending] = useState<Pending>(null);
@@ -63,6 +71,8 @@ export function InstanceList({
       {instances.map((instance) => {
         const purchase = instance.purchaseId ? purchasesById.get(instance.purchaseId) : undefined;
         const isPending = pending?.id === instance.id;
+        const heldBy = claims.get(instance.id);
+        const blockedId = heldBy ? `br-instance-held-${instance.id}` : undefined;
         return (
           <li
             key={instance.id}
@@ -80,12 +90,18 @@ export function InstanceList({
                 {instance.status === 'active' ? 'Active' : 'Retired'}
               </span>
               {instance.note && <span className="br-instance-note">{instance.note}</span>}
+              {heldBy && (
+                <span id={blockedId} className="br-instance-build">
+                  In use by <Link to={brRoutes.build(heldBy.id)}>{heldBy.name}</Link>
+                </span>
+              )}
               <span className="br-instance-actions">
                 {instance.status === 'active' ? (
                   <button
                     type="button"
                     onClick={() => begin({ id: instance.id, kind: 'retire' })}
-                    disabled={busy}
+                    disabled={busy || heldBy !== undefined}
+                    aria-describedby={blockedId}
                   >
                     Retire
                   </button>
@@ -102,7 +118,8 @@ export function InstanceList({
                   type="button"
                   className="br-danger"
                   onClick={() => begin({ id: instance.id, kind: 'delete' })}
-                  disabled={busy}
+                  disabled={busy || heldBy !== undefined}
+                  aria-describedby={blockedId}
                 >
                   Delete
                 </button>

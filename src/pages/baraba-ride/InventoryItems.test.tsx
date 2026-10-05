@@ -2,6 +2,10 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { InventoryItems } from './InventoryItems';
+import { MemoryRouter } from 'react-router';
+import { claims } from '@/lib/br/builds';
+import { TIRE_POSITIONS } from '@/lib/br/build-types';
+import { claim, makeBuild } from '@/test/br-builds';
 import { makeInstance, makeInventory, makePurchase } from '@/test/br-inventory';
 
 afterEach(cleanup);
@@ -125,5 +129,47 @@ describe('InventoryItems', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Add items' }));
     expect(screen.getByRole('dialog', { name: 'Add items' })).toBeInTheDocument();
+  });
+});
+
+describe('InventoryItems with build claims', () => {
+  it('shows in-builds and free counts for an item with held instances', () => {
+    const tires = Array.from({ length: 6 }, () => makeInstance({ itemId: 'tire:h36' }));
+    const built = makeBuild({
+      status: 'built',
+      parts: TIRE_POSITIONS.map((position, n) => claim(position, tires[n])),
+    });
+    const inventory = makeInventory({
+      instances: [...tires, makeInstance({ itemId: 'tire:h36', status: 'retired' })],
+    });
+    render(
+      <MemoryRouter>
+        <InventoryItems inventory={inventory} claims={claims([built])} />
+      </MemoryRouter>,
+    );
+
+    const group = within(screen.getByRole('region', { name: 'Tires' }));
+    expect(group.getByText('6 active')).toBeInTheDocument();
+    expect(group.getByText('4 in builds')).toBeInTheDocument();
+    expect(group.getByText('2 free')).toBeInTheDocument();
+    expect(group.getByText('1 retired')).toBeInTheDocument();
+  });
+
+  it('shows only the active count for an item with nothing in builds', () => {
+    const held = makeInstance({ itemId: 'chassis:alpha' });
+    const built = makeBuild({ status: 'built', parts: [claim('chassis', held)] });
+    const inventory = makeInventory({
+      instances: [held, makeInstance({ itemId: 'tire:h36' }), makeInstance({ itemId: 'tire:h36' })],
+    });
+    render(
+      <MemoryRouter>
+        <InventoryItems inventory={inventory} claims={claims([built])} />
+      </MemoryRouter>,
+    );
+
+    const tires = within(screen.getByRole('region', { name: 'Tires' }));
+    expect(tires.getByText('2 active')).toBeInTheDocument();
+    expect(tires.queryByText(/in builds/)).toBeNull();
+    expect(tires.queryByText(/free/)).toBeNull();
   });
 });

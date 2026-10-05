@@ -16,6 +16,7 @@ import { ProductCatalog } from './ProductCatalog';
 import { ProductDetail } from './ProductDetail';
 import { PartCatalog } from './PartCatalog';
 import { InventorySegment } from './InventorySegment';
+import { BuildsSegment } from './BuildsSegment';
 import './BrPage.css';
 
 /** Sends the game root to Catalog, honouring the earlier query-string links. */
@@ -70,18 +71,6 @@ function CatalogSegment() {
   );
 }
 
-/** Stands in for a segment whose features do not exist yet. Reads no user data. */
-function SegmentPlaceholder({ title, description }: { title: string; description: string }) {
-  return (
-    <section className="br-placeholder" aria-labelledby="br-placeholder-title">
-      <h2 id="br-placeholder-title">{title}</h2>
-      <p>
-        {title} is not available yet. {description}
-      </p>
-    </section>
-  );
-}
-
 function BrShell({ userId }: { userId: string }) {
   return (
     <>
@@ -98,15 +87,7 @@ function BrShell({ userId }: { userId: string }) {
         <Route index element={<RootRedirect />} />
         <Route path="catalog/*" element={<CatalogSegment />} />
         <Route path="inventory/*" element={<InventorySegment userId={userId} />} />
-        <Route
-          path="builds"
-          element={
-            <SegmentPlaceholder
-              title="Builds"
-              description="It will hold the machines you plan and build from your parts."
-            />
-          }
-        />
+        <Route path="builds/*" element={<BuildsSegment userId={userId} />} />
         <Route path="*" element={<Navigate to={brRoutes.catalog} replace />} />
       </Routes>
 

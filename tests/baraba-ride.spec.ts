@@ -62,6 +62,8 @@ test('segment navigation switches between Catalog, Inventory and Builds', async 
   await segments.getByRole('link', { name: 'Builds' }).click();
   await expect(page).toHaveURL('/baraba-ride/builds');
   await expect(page.getByRole('heading', { name: 'Builds' })).toBeVisible();
+  await expect(page.getByText(/No builds yet/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'New build' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Catalog views' })).toHaveCount(0);
   await expect(page.getByRole('navigation', { name: 'Inventory views' })).toHaveCount(0);
 
@@ -91,6 +93,56 @@ test('inventory sub-navigation switches between Items and Purchases', async ({ p
   await page.goto('/baraba-ride/inventory/nowhere');
   await expect(page).toHaveURL('/baraba-ride/inventory');
   await expect(page.getByRole('heading', { name: 'Items' })).toBeVisible();
+});
+
+test('creating a build opens it as an empty plan', async ({ page }) => {
+  const build = {
+    id: '11111111-1111-4111-8111-111111111111',
+    profile_id: '00000000-0000-4000-8000-000000000000',
+    name: 'Silver idea',
+    status: 'plan',
+    note: '',
+    created_at: '2026-10-06T00:00:00Z',
+    updated_at: '2026-10-06T00:00:00Z',
+  };
+  let created = false;
+  // Every write first upserts the profile row.
+  await page.route('**/rest/v1/user_profiles*', (route) =>
+    route.fulfill({ status: 201, contentType: 'application/json', body: '' }),
+  );
+  // The insert answers with the created row; reads return it from then on.
+  await page.route('**/rest/v1/br_builds*', async (route) => {
+    if (route.request().method() === 'POST') {
+      created = true;
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify(build),
+      });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(created ? [{ ...build, br_build_parts: [] }] : []),
+    });
+  });
+
+  await page.goto('/baraba-ride/builds');
+  await page.getByRole('button', { name: 'New build' }).click();
+  const dialog = page.getByRole('dialog', { name: 'New build' });
+  await dialog.getByLabel('Name').fill('Silver idea');
+  await dialog.getByRole('button', { name: 'Create build' }).click();
+
+  await expect(page).toHaveURL(`/baraba-ride/builds/${build.id}`);
+  await expect(page.getByRole('heading', { level: 2, name: /Silver idea/ })).toBeVisible();
+  await expect(page.getByText('No build with that address.')).toHaveCount(0);
+  const positions = page.getByRole('group', { name: 'Positions' });
+  await expect(positions.getByRole('region')).toHaveCount(7);
+  await expect(positions.getByText('Empty')).toHaveCount(7);
+
+  await page.goto('/baraba-ride/builds/x/y');
+  await expect(page).toHaveURL('/baraba-ride/builds');
 });
 
 test('earlier query-string links reach their new addresses', async ({ page }) => {

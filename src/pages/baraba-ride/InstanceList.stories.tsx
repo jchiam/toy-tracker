@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { MemoryRouter } from 'react-router';
 import { InstanceList } from './InstanceList';
+import { claims } from '@/lib/br/builds';
+import { claim, makeBuild } from '@/test/br-builds';
 import type { Instance, Purchase } from '@/lib/br/inventory-types';
 import './BrPage.css';
 
@@ -58,6 +61,25 @@ export const Mixed: Story = {
       instance({ id: 'i4', status: 'retired', note: 'cracked on the rim' }),
     ],
   },
+};
+
+const held = instance({ id: 'i5' });
+
+/** Retire and delete are unavailable for the instance a built build holds. */
+export const HeldByBuild: Story = {
+  args: {
+    instances: [held, instance({ id: 'i6' })],
+    claims: claims([
+      makeBuild({ name: 'Red Dash', status: 'built', parts: [claim('tire_fl', held)] }),
+    ]),
+  },
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 
 export const PhoneWidth: Story = {

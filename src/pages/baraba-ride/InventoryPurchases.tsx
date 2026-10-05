@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { BrInventory } from '@/hooks/useBrInventory';
+import type { Build } from '@/lib/br/build-types';
 import { sortPurchases } from '@/lib/br/inventory';
 import { PRODUCTS } from '@/lib/br/catalog';
 import { formatDate } from '@/lib/br/labels';
@@ -8,6 +9,8 @@ import { RecordPurchaseDialog } from './RecordPurchaseDialog';
 
 interface InventoryPurchasesProps {
   inventory: BrInventory;
+  /** The build holding each claimed instance. */
+  claims?: Map<string, Build>;
 }
 
 function productName(code: string): string {
@@ -15,7 +18,7 @@ function productName(code: string): string {
 }
 
 /** Purchases view: every recorded purchase with the instances it produced. */
-export function InventoryPurchases({ inventory }: InventoryPurchasesProps) {
+export function InventoryPurchases({ inventory, claims }: InventoryPurchasesProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -67,6 +70,8 @@ export function InventoryPurchases({ inventory }: InventoryPurchasesProps) {
           {sorted.map((purchase) => {
             const linked = instances.filter((i) => i.purchaseId === purchase.id);
             const name = productName(purchase.productCode);
+            // Builds holding any of this purchase's items; while there are any it cannot be deleted.
+            const holders = [...new Set(linked.flatMap((i) => claims?.get(i.id) ?? []))];
             return (
               <li key={purchase.id}>
                 <details className="br-purchase">
@@ -88,10 +93,22 @@ export function InventoryPurchases({ inventory }: InventoryPurchasesProps) {
                       instances={linked}
                       purchases={purchases}
                       actions={listActions}
+                      claims={claims}
                       label={`${purchase.productCode} items`}
                     />
                     <div className="br-purchase-actions">
-                      {confirming === purchase.id ? (
+                      {confirming === purchase.id && holders.length > 0 ? (
+                        <div role="group" aria-label="Purchase cannot be deleted">
+                          <p>
+                            This purchase cannot be deleted while its items are in use by{' '}
+                            {holders.map((b) => `“${b.name}”`).join(', ')}. Swap the items out or
+                            take the {holders.length === 1 ? 'build' : 'builds'} apart first.
+                          </p>
+                          <button type="button" onClick={() => setConfirming(null)}>
+                            Close
+                          </button>
+                        </div>
+                      ) : confirming === purchase.id ? (
                         <div role="group" aria-label="Delete this purchase">
                           <p>
                             Delete this purchase and its {linked.length}{' '}
