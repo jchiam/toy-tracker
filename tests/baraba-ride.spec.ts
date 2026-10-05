@@ -3,6 +3,10 @@ import { signIn } from './helpers/session';
 
 test.beforeEach(async ({ page }) => {
   await signIn(page);
+  // The seeded session is not a real one, so answer inventory reads locally.
+  await page.route('**/rest/v1/br_*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
+  );
 });
 
 test('catalog lists the launch lineup and filters by style', async ({ page }) => {
@@ -51,19 +55,42 @@ test('segment navigation switches between Catalog, Inventory and Builds', async 
 
   await segments.getByRole('link', { name: 'Inventory' }).click();
   await expect(page).toHaveURL('/baraba-ride/inventory');
-  await expect(page.getByRole('heading', { name: 'Inventory' })).toBeVisible();
-  await expect(page.getByText('Inventory is not available yet.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Items' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Inventory views' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Catalog views' })).toHaveCount(0);
 
   await segments.getByRole('link', { name: 'Builds' }).click();
   await expect(page).toHaveURL('/baraba-ride/builds');
   await expect(page.getByRole('heading', { name: 'Builds' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Catalog views' })).toHaveCount(0);
+  await expect(page.getByRole('navigation', { name: 'Inventory views' })).toHaveCount(0);
 
   await page.goBack();
   await expect(page).toHaveURL('/baraba-ride/inventory');
   await page.goBack();
   await expect(page).toHaveURL('/baraba-ride/catalog');
   await expect(page.getByRole('region', { name: 'Products' })).toBeVisible();
+});
+
+test('inventory sub-navigation switches between Items and Purchases', async ({ page }) => {
+  await page.goto('/baraba-ride/inventory');
+  const views = page.getByRole('navigation', { name: 'Inventory views' });
+  await expect(views.getByRole('link', { name: 'Items' })).toHaveAttribute('aria-current', 'page');
+
+  await views.getByRole('link', { name: 'Purchases' }).click();
+  await expect(page).toHaveURL('/baraba-ride/inventory/purchases');
+  await expect(page.getByRole('heading', { name: 'Purchases' })).toBeVisible();
+  await expect(views.getByRole('link', { name: 'Purchases' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+
+  await page.goto('/baraba-ride/inventory/purchases');
+  await expect(page.getByRole('heading', { name: 'Purchases' })).toBeVisible();
+
+  await page.goto('/baraba-ride/inventory/nowhere');
+  await expect(page).toHaveURL('/baraba-ride/inventory');
+  await expect(page.getByRole('heading', { name: 'Items' })).toBeVisible();
 });
 
 test('earlier query-string links reach their new addresses', async ({ page }) => {

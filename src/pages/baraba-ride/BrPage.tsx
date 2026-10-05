@@ -15,6 +15,7 @@ import { brRoutes } from '@/lib/br/routes';
 import { ProductCatalog } from './ProductCatalog';
 import { ProductDetail } from './ProductDetail';
 import { PartCatalog } from './PartCatalog';
+import { InventorySegment } from './InventorySegment';
 import './BrPage.css';
 
 /** Sends the game root to Catalog, honouring the earlier query-string links. */
@@ -81,7 +82,7 @@ function SegmentPlaceholder({ title, description }: { title: string; description
   );
 }
 
-function BrShell() {
+function BrShell({ userId }: { userId: string }) {
   return (
     <>
       <header className="br-header">
@@ -96,15 +97,7 @@ function BrShell() {
       <Routes>
         <Route index element={<RootRedirect />} />
         <Route path="catalog/*" element={<CatalogSegment />} />
-        <Route
-          path="inventory"
-          element={
-            <SegmentPlaceholder
-              title="Inventory"
-              description="It will track the products you own and the parts they give you."
-            />
-          }
-        />
+        <Route path="inventory/*" element={<InventorySegment userId={userId} />} />
         <Route
           path="builds"
           element={
@@ -143,7 +136,7 @@ export function BrPage({ session, isAuthLoading, onSignIn }: GamePageProps) {
 
   return (
     <main className="main-content">
-      <BrShell />
+      <BrShell userId={session.user.id} />
     </main>
   );
 }

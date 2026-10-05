@@ -23,9 +23,9 @@
 
 ## 4. Routes and segment shell
 
-- [ ] 4.1 Add `brRoutes.purchases` and a `routes.test.ts` case for it
-- [ ] 4.2 Create `InventorySegment` with the Items/Purchases sub-nav, nested routes (`index`, `purchases`, `*` redirect with replace), mount it at `inventory/*` in `BrPage.tsx`, and remove the Inventory placeholder; update `BrPage.test.tsx` for sub-nav presence, redirect, and absence of the sub-nav in Catalog and Builds
-- [ ] 4.3 Update the Playwright segment spec in `tests/` for the Inventory sub-nav, `/baraba-ride/inventory/purchases` direct access, and the unknown-path redirect; verify with `npx playwright test --project=chromium`
+- [x] 4.1 Add `brRoutes.purchases` and a `routes.test.ts` case for it
+- [x] 4.2 Create `InventorySegment` with the Items/Purchases sub-nav, nested routes (`index`, `purchases`, `*` redirect with replace), mount it at `inventory/*` in `BrPage.tsx`, and remove the Inventory placeholder; update `BrPage.test.tsx` for sub-nav presence, redirect, and absence of the sub-nav in Catalog and Builds
+- [x] 4.3 Update the Playwright segment spec in `tests/` for the Inventory sub-nav, `/baraba-ride/inventory/purchases` direct access, and the unknown-path redirect; verify with `npx playwright test --project=chromium`
 
 ## 5. Items view
 

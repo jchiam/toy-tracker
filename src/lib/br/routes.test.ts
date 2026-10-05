@@ -19,6 +19,7 @@ describe('brRoutes', () => {
 
   it('builds the inventory and builds paths', () => {
     expect(brRoutes.inventory).toBe('/baraba-ride/inventory');
+    expect(brRoutes.purchases).toBe('/baraba-ride/inventory/purchases');
     expect(brRoutes.builds).toBe('/baraba-ride/builds');
   });
 });

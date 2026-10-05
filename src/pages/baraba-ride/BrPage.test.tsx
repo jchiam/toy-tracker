@@ -4,6 +4,27 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
 import type { Session } from '@supabase/supabase-js';
 import { BrPage } from './BrPage';
+import type { BrInventory } from '@/hooks/useBrInventory';
+
+// The inventory segment loads user data through this hook; the page tests
+// only exercise navigation, so it resolves to an empty, loaded inventory.
+vi.mock('@/hooks/useBrInventory', () => ({
+  useBrInventory: (): BrInventory => ({
+    purchases: [],
+    instances: [],
+    loading: false,
+    error: null,
+    actions: {
+      recordPurchase: vi.fn(),
+      addInstances: vi.fn(),
+      setInstanceStatus: vi.fn(),
+      updateInstanceNote: vi.fn(),
+      deleteInstance: vi.fn(),
+      deletePurchase: vi.fn(),
+      reload: vi.fn(),
+    },
+  }),
+}));
 
 const mockSession = {
   user: { id: 'test-user-123', email: 'test@example.com' },
@@ -38,6 +59,7 @@ function renderAt(
 const location = () => screen.getByTestId('location').textContent;
 const segments = () => within(screen.getByRole('navigation', { name: 'Segments' }));
 const catalogViews = () => within(screen.getByRole('navigation', { name: 'Catalog views' }));
+const inventoryViews = () => within(screen.getByRole('navigation', { name: 'Inventory views' }));
 
 afterEach(cleanup);
 
@@ -96,11 +118,11 @@ describe('BrPage', () => {
       expect(screen.getByRole('heading', { level: 2, name: 'Builds' })).toBeInTheDocument();
     });
 
-    it('shows the Inventory placeholder at its own address', () => {
+    it('shows the Inventory segment at its own address', () => {
       renderAt('/baraba-ride/inventory');
       expect(screen.getByRole('heading', { level: 1, name: 'Baraba Ride' })).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 2, name: 'Inventory' })).toBeInTheDocument();
-      expect(screen.getByText(/Inventory is not available yet\./)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: 'Items' })).toBeInTheDocument();
+      expect(screen.queryByText(/not available yet/)).toBeNull();
       expect(segments().getByRole('link', { name: 'Inventory' })).toHaveAttribute(
         'aria-current',
         'page',
@@ -120,6 +142,47 @@ describe('BrPage', () => {
         expect(screen.queryByRole('navigation', { name: 'Catalog views' })).toBeNull();
       },
     );
+
+    it.each(['/baraba-ride/catalog', '/baraba-ride/builds'])(
+      'shows no inventory sub-navigation at %s',
+      (path) => {
+        renderAt(path);
+        expect(screen.queryByRole('navigation', { name: 'Inventory views' })).toBeNull();
+      },
+    );
+  });
+
+  describe('inventory views', () => {
+    it('shows Items as current at the inventory address', () => {
+      renderAt('/baraba-ride/inventory');
+      expect(inventoryViews().getByRole('link', { name: 'Items' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+      expect(inventoryViews().getByRole('link', { name: 'Purchases' })).not.toHaveAttribute(
+        'aria-current',
+      );
+    });
+
+    it('switches to Purchases from the sub-navigation without a reload', async () => {
+      renderAt('/baraba-ride/inventory');
+      await userEvent.click(inventoryViews().getByRole('link', { name: 'Purchases' }));
+      expect(location()).toBe('/baraba-ride/inventory/purchases');
+      expect(inventoryViews().getByRole('link', { name: 'Purchases' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+      expect(screen.getByRole('heading', { level: 2, name: 'Purchases' })).toBeInTheDocument();
+    });
+
+    it('opens Purchases by address', () => {
+      renderAt('/baraba-ride/inventory/purchases');
+      expect(screen.getByRole('heading', { level: 2, name: 'Purchases' })).toBeInTheDocument();
+      expect(segments().getByRole('link', { name: 'Inventory' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+    });
   });
 
   describe('redirects', () => {
@@ -127,6 +190,7 @@ describe('BrPage', () => {
       ['/baraba-ride', '/baraba-ride/catalog'],
       ['/baraba-ride/nowhere', '/baraba-ride/catalog'],
       ['/baraba-ride/catalog/nowhere', '/baraba-ride/catalog'],
+      ['/baraba-ride/inventory/nowhere', '/baraba-ride/inventory'],
       ['/baraba-ride?product=BR-01', '/baraba-ride/catalog/products/BR-01'],
       ['/baraba-ride?view=parts', '/baraba-ride/catalog/parts'],
       ['/baraba-ride?view=parts&product=BR-01', '/baraba-ride/catalog/products/BR-01'],
