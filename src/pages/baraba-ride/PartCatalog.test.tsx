@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { PartCatalog } from './PartCatalog';
-import { PARTS, PRODUCTS, PRODUCT_PARTS } from '@/lib/br/catalog';
+import { ACCESSORIES, PARTS, PRODUCTS, PRODUCT_PARTS } from '@/lib/br/catalog';
 import type { Part } from '@/lib/br/types';
 
 function renderParts(parts: Part[] = PARTS) {
@@ -31,6 +31,16 @@ describe('PartCatalog', () => {
         .getAllByRole('heading', { level: 3 })
         .map((heading) => heading.textContent),
     ).toEqual(['Dual Blade', 'Wide Shield', 'Mega Launcher']);
+  });
+
+  it('lists no accessory, even though the mapping references them', () => {
+    renderParts();
+    expect(ACCESSORIES.length).toBeGreaterThan(0);
+    for (const accessory of ACCESSORIES) {
+      expect(screen.queryByRole('heading', { name: accessory.nameEn })).toBeNull();
+    }
+    expect(screen.queryByText(/charger/i)).toBeNull();
+    expect(screen.queryByText(/colosseum/i)).toBeNull();
   });
 
   it('omits slots that have no parts', () => {

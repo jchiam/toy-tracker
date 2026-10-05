@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { validateCatalog } from './validate';
 import {
+  ACCESSORIES,
   PARTS,
   PRODUCTS,
   PRODUCT_PARTS,
@@ -8,7 +9,7 @@ import {
   resolveProductParts,
   variantShot,
 } from './catalog';
-import type { CropBox, Part, Product, ProductParts } from './types';
+import type { Accessory, CropBox, Part, Product, ProductParts } from './types';
 
 const product = (code: string, contents: Product['contents']): Product => ({
   code,
@@ -25,8 +26,22 @@ const product = (code: string, contents: Product['contents']): Product => ({
 });
 
 const products = [
-  product('BR-01', { cowl: 1, tire: 4, sticker: 1 }),
+  product('BR-01', { cowl: 1, tire: 4, sticker: 1, charger: 1 }),
   product('BR-10', { body: 1 }),
+];
+const accessories: Accessory[] = [
+  {
+    id: 'charger:ride-charger',
+    kind: 'charger',
+    nameEn: 'Ride Charger',
+    nameJa: 'ライドチャージャー',
+  },
+  {
+    id: 'colosseum:fold-colosseum',
+    kind: 'colosseum',
+    nameEn: 'Fold Colosseum',
+    nameJa: 'フォールドコロシアム',
+  },
 ];
 const parts: Part[] = [
   { id: 'cowl:storm-falcon', slot: 'cowl', nameEn: 'Storm Falcon', nameJa: 'ストームファルコン' },
@@ -98,6 +113,70 @@ describe('validateCatalog', () => {
   it('does not report products that contain no parts', () => {
     expect(validateCatalog(products, parts, mapping).unmapped).not.toContain('BR-10');
   });
+
+  describe('accessories', () => {
+    const withCharger: ProductParts[] = [
+      {
+        ...mapping[0],
+        accessories: [{ accessoryId: 'charger:ride-charger', quantity: 1 }],
+      },
+    ];
+    const colosseum: ProductParts = {
+      productCode: 'BR-10',
+      parts: [],
+      accessories: [{ accessoryId: 'colosseum:fold-colosseum', quantity: 1 }],
+      source: 'test',
+    };
+
+    it('accepts a charger alongside parts without counting it toward a slot', () => {
+      expect(validateCatalog(products, parts, withCharger, accessories).errors).toEqual([]);
+    });
+
+    it('accepts a product whose only content is an accessory', () => {
+      const result = validateCatalog(products, parts, [...withCharger, colosseum], accessories);
+      expect(result.errors).toEqual([]);
+      expect(result.unmapped).toEqual([]);
+    });
+
+    it('rejects an unknown accessory id, naming it', () => {
+      const { errors } = validateCatalog(products, parts, withCharger, []);
+      expect(errors).toEqual(['BR-01 references unknown accessory "charger:ride-charger"']);
+    });
+
+    it('rejects an accessory line that carries a variant', () => {
+      const bad = [
+        {
+          ...mapping[0],
+          accessories: [
+            { accessoryId: 'charger:ride-charger', quantity: 1, variant: { color: 'Red' } },
+          ],
+        },
+      ] as unknown as ProductParts[];
+      expect(validateCatalog(products, parts, bad, accessories).errors).toEqual([
+        'BR-01 "charger:ride-charger" is an accessory and cannot have a variant',
+      ]);
+    });
+
+    it('rejects non-positive accessory quantities', () => {
+      const bad: ProductParts[] = [
+        { ...mapping[0], accessories: [{ accessoryId: 'charger:ride-charger', quantity: 0 }] },
+      ];
+      expect(validateCatalog(products, parts, bad, accessories).errors).toEqual([
+        'BR-01 has invalid quantity 0 for "charger:ride-charger"',
+      ]);
+    });
+
+    it('rejects duplicate accessory ids and ids that do not match their kind', () => {
+      const bad: Accessory[] = [
+        ...accessories,
+        accessories[0],
+        { id: 'charger:arena', kind: 'colosseum', nameEn: 'x', nameJa: 'x' },
+      ];
+      const { errors } = validateCatalog(products, parts, withCharger, bad);
+      expect(errors).toContain('Duplicate accessory id "charger:ride-charger"');
+      expect(errors).toContain('Accessory id "charger:arena" does not match its kind "colosseum"');
+    });
+  });
 });
 
 describe('validateCatalog variants', () => {
@@ -144,11 +223,19 @@ describe('validateCatalog variants', () => {
 
 describe('committed catalog data', () => {
   it('is valid', () => {
-    expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS).errors).toEqual([]);
+    expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS, ACCESSORIES).errors).toEqual([]);
   });
 
   it('pictures every mapped part', () => {
-    expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS).missingImages).toEqual([]);
+    expect(validateCatalog(PRODUCTS, PARTS, PRODUCT_PARTS, ACCESSORIES).missingImages).toEqual([]);
+  });
+
+  it('maps every charger product and the colosseum to accessories', () => {
+    const byCode = new Map(PRODUCT_PARTS.map((e) => [e.productCode, e.accessories ?? []]));
+    for (const code of ['BR-01', 'BR-02', 'BR-03', 'BR-04', 'BR-05', 'BR-06']) {
+      expect(byCode.get(code)).toEqual([{ accessoryId: 'charger:ride-charger', quantity: 1 }]);
+    }
+    expect(byCode.get('BR-10')).toEqual([{ accessoryId: 'colosseum:fold-colosseum', quantity: 1 }]);
   });
 
   it('records every variant of a part in product-code order', () => {

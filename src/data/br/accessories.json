@@ -1,0 +1,14 @@
+[
+  {
+    "id": "charger:ride-charger",
+    "kind": "charger",
+    "nameEn": "Ride Charger",
+    "nameJa": "ライドチャージャー"
+  },
+  {
+    "id": "colosseum:fold-colosseum",
+    "kind": "colosseum",
+    "nameEn": "Fold Colosseum",
+    "nameJa": "フォールドコロシアム"
+  }
+]

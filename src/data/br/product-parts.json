@@ -83,6 +83,12 @@
         }
       }
     ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
+      }
+    ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
   },
   {
@@ -153,6 +159,12 @@
         }
       }
     ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
+      }
+    ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
   },
   {
@@ -221,6 +233,12 @@
             }
           }
         }
+      }
+    ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description."
@@ -309,6 +327,12 @@
         }
       }
     ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
+      }
+    ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-01 with the same parts. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
   },
   {
@@ -379,6 +403,12 @@
         }
       }
     ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
+      }
+    ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-02 with the same parts."
   },
   {
@@ -447,6 +477,12 @@
             }
           }
         }
+      }
+    ],
+    "accessories": [
+      {
+        "accessoryId": "charger:ride-charger",
+        "quantity": 1
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. Colour variant of BR-03 with the same parts."
@@ -628,5 +664,16 @@
       }
     ],
     "source": "Fan compilation at kyoganken.sakura.ne.jp/baraba (updated 2026-08-20), consistent with the official product description. The box lists 4 tires: 2 RW32 and 2 LW32, confirmed by the collection owner."
+  },
+  {
+    "productCode": "BR-10",
+    "parts": [],
+    "accessories": [
+      {
+        "accessoryId": "colosseum:fold-colosseum",
+        "quantity": 1
+      }
+    ],
+    "source": "Official product page lists the arena as its sole content (本体)."
   }
 ]
