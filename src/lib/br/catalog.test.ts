@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { findAccessorySources, resolveItem, resolveProductContents } from './catalog';
+import {
+  findAccessorySources,
+  purchasableProducts,
+  resolveItem,
+  resolveProductContents,
+} from './catalog';
 
 describe('resolveItem', () => {
   it('resolves a part id to its part', () => {
@@ -74,5 +79,27 @@ describe('findAccessorySources', () => {
 
   it('is empty for an unknown accessory', () => {
     expect(findAccessorySources('charger:ghost')).toEqual([]);
+  });
+});
+
+describe('purchasableProducts', () => {
+  it('offers only mapped products, in code order', () => {
+    expect(purchasableProducts().map((p) => p.code)).toEqual([
+      'BR-01',
+      'BR-02',
+      'BR-03',
+      'BR-04',
+      'BR-05',
+      'BR-06',
+      'BR-07',
+      'BR-08',
+      'BR-09',
+      'BR-10',
+    ]);
+  });
+
+  it('drops a product with no mapping entry', () => {
+    const unmapped = purchasableProducts(undefined, []);
+    expect(unmapped).toEqual([]);
   });
 });

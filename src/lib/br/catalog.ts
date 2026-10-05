@@ -144,3 +144,13 @@ export function findAccessorySources(
     return quantity ? [{ product, quantity }] : [];
   });
 }
+
+/** Products a purchase can be recorded for: those with a contents mapping, by code. */
+export function purchasableProducts(
+  products: Product[] = PRODUCTS,
+  productParts: ProductParts[] = PRODUCT_PARTS,
+): Product[] {
+  return products
+    .filter((product) => productParts.some((e) => e.productCode === product.code))
+    .sort((a, b) => a.code.localeCompare(b.code));
+}

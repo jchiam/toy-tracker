@@ -29,10 +29,10 @@
 
 ## 5. Items view
 
-- [ ] 5.1 Create `InstanceList` (expandable instances with source product or "unknown", purchase date, status, note, retire/reactivate/delete with in-component confirmation) plus Storybook story and unit tests for each action
-- [ ] 5.2 Create `InventoryItems` (grouped by slot then accessory kind, active and retired counts, empty state with calls to action, loading and error states) plus story and unit tests for grouping, counts, empty, loading, and error
-- [ ] 5.3 Create `RecordPurchaseDialog` (mapped products only, acquisition date defaulting to today, note) and wire it to `recordPurchase`; unit test that an unmapped product is not offered and that BR-10 expands to one colosseum instance
-- [ ] 5.4 Create `AddItemsDialog` (parts by slot then accessories by kind, quantity, optional source product from the item's sources, "unknown") and wire it to `addInstances`; unit test quantity expansion and empty source
+- [x] 5.1 Create `InstanceList` (expandable instances with source product or "unknown", purchase date, status, note, retire/reactivate/delete with in-component confirmation) plus Storybook story and unit tests for each action
+- [x] 5.2 Create `InventoryItems` (grouped by slot then accessory kind, active and retired counts, empty state with calls to action, loading and error states) plus story and unit tests for grouping, counts, empty, loading, and error
+- [x] 5.3 Create `RecordPurchaseDialog` (mapped products only, acquisition date defaulting to today, note) and wire it to `recordPurchase`; unit test that an unmapped product is not offered and that BR-10 expands to one colosseum instance
+- [x] 5.4 Create `AddItemsDialog` (parts by slot then accessories by kind, quantity, optional source product from the item's sources, "unknown") and wire it to `addInstances`; unit test quantity expansion and empty source
 - [ ] 5.5 Verify in the dev app that recording a purchase from Items shows its instances without reload
 
 ## 6. Purchases view
