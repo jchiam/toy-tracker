@@ -24,7 +24,7 @@ import {
 } from './catalog.ts';
 import { createImageStore } from './images.ts';
 import { completeCatalog } from './pipeline.ts';
-import type { Part, Product, ProductParts } from '../../src/lib/br/types.ts';
+import type { Accessory, Part, Product, ProductParts } from '../../src/lib/br/types.ts';
 
 const LINEUP_URL = `${SOURCE_ORIGIN}/ja/series/barabaride/lineup/`;
 const USER_AGENT = 'toy-tracker-catalog/0.1 (+https://github.com/jchiam/toy-tracker)';
@@ -93,6 +93,7 @@ async function main() {
     shots,
     parts: readCurated<Part>('parts.json'),
     productParts: readCurated<ProductParts>('product-parts.json'),
+    accessories: readCurated<Accessory>('accessories.json'),
     store: createImageStore(),
     fetchImage,
     reupload,

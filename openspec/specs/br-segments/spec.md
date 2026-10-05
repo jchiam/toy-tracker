@@ -79,7 +79,7 @@ Links in the earlier query-string form SHALL lead to the matching view: `/baraba
 
 ### Requirement: Catalog offers Products and Parts views
 
-Within the Catalog segment the page SHALL show a sub-navigation offering Products and Parts and SHALL indicate the current one. Products SHALL be indicated on both the product list and a product's detail. The sub-navigation SHALL NOT appear in the other segments.
+Within the Catalog segment the page SHALL show a sub-navigation offering Products and Parts and SHALL indicate the current one. Products SHALL be indicated on both the product list and a product's detail. The sub-navigation SHALL NOT appear in the Builds segment. Inventory has its own sub-navigation per "Inventory offers Items and Purchases views".
 
 #### Scenario: Products current on the list
 
@@ -98,27 +98,8 @@ Within the Catalog segment the page SHALL show a sub-navigation offering Product
 
 #### Scenario: Absent outside Catalog
 
-- **WHEN** a signed-in user opens the Inventory or Builds segment
+- **WHEN** a signed-in user opens the Builds segment
 - **THEN** no Products / Parts sub-navigation is shown
-
-### Requirement: Segments without features show a placeholder
-
-Until their features exist, the Inventory and Builds segments SHALL each show a heading naming the segment and a message that the segment is not available yet. They SHALL NOT read or store any user data.
-
-#### Scenario: Inventory placeholder
-
-- **WHEN** a signed-in user opens `/baraba-ride/inventory`
-- **THEN** a heading "Inventory" and a not-available-yet message are shown
-
-#### Scenario: Builds placeholder
-
-- **WHEN** a signed-in user opens `/baraba-ride/builds`
-- **THEN** a heading "Builds" and a not-available-yet message are shown
-
-#### Scenario: No data requests
-
-- **WHEN** either placeholder is shown
-- **THEN** the page makes no request for user data
 
 ### Requirement: Segments require sign-in
 
@@ -133,3 +114,41 @@ Every Baraba Ride segment URL SHALL be subject to the same sign-in gate as the B
 
 - **WHEN** a signed-out user opens `/baraba-ride`
 - **THEN** the sign-in gate is shown and the address stays `/baraba-ride`
+
+### Requirement: Builds segment shows a placeholder
+
+Until its features exist, the Builds segment SHALL show a heading naming the segment and a message that the segment is not available yet. It SHALL NOT read or store any user data.
+
+#### Scenario: Builds placeholder
+
+- **WHEN** a signed-in user opens `/baraba-ride/builds`
+- **THEN** a heading "Builds" and a not-available-yet message are shown
+
+#### Scenario: No data requests
+
+- **WHEN** the Builds placeholder is shown
+- **THEN** the page makes no request for user data
+
+### Requirement: Inventory offers Items and Purchases views
+
+Within the Inventory segment the page SHALL show a sub-navigation offering Items and Purchases and SHALL indicate the current one. Items SHALL be served at `/baraba-ride/inventory` and Purchases at `/baraba-ride/inventory/purchases`. The sub-navigation SHALL NOT appear in other segments.
+
+#### Scenario: Items current by default
+
+- **WHEN** a signed-in user opens `/baraba-ride/inventory`
+- **THEN** the sub-navigation shows Items as current
+
+#### Scenario: Switch to Purchases
+
+- **WHEN** the user selects Purchases in the sub-navigation
+- **THEN** the address becomes `/baraba-ride/inventory/purchases`, Purchases is shown as current, and the page is not reloaded
+
+#### Scenario: Absent outside Inventory
+
+- **WHEN** a signed-in user opens the Catalog or Builds segment
+- **THEN** no Items / Purchases sub-navigation is shown
+
+#### Scenario: Unknown inventory path
+
+- **WHEN** a signed-in user opens `/baraba-ride/inventory/nowhere`
+- **THEN** the address becomes `/baraba-ride/inventory` and the Items view is shown

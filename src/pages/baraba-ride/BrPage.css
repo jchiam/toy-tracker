@@ -336,3 +336,293 @@
   font-size: var(--typography-font-size-xs);
   color: var(--color-text-secondary);
 }
+
+/* Inventory */
+.br-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.br-toolbar h2 {
+  margin: 0;
+}
+
+.br-toolbar-actions,
+.br-dialog-actions,
+.br-instance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.br-button,
+.br-toolbar-actions button,
+.br-dialog-actions button,
+.br-instance-actions button,
+.br-instance-confirm button,
+.br-purchase-actions button {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--typography-font-size-sm);
+  font-weight: var(--typography-font-weight-medium);
+  background: var(--color-bg-surface);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.br-toolbar-actions button:hover,
+.br-dialog-actions button:hover,
+.br-instance-actions button:hover,
+.br-instance-confirm button:hover,
+.br-purchase-actions button:hover {
+  border-color: var(--color-br-accent);
+  background: var(--color-bg-surface-hover);
+}
+
+.br-toolbar-actions button:disabled,
+.br-dialog-actions button:disabled,
+.br-instance-actions button:disabled,
+.br-instance-confirm button:disabled,
+.br-purchase-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.br-danger {
+  color: var(--color-ui-danger);
+}
+
+button.br-danger:hover {
+  border-color: var(--color-ui-danger);
+  background: var(--color-ui-danger-bg);
+}
+
+.br-error,
+.br-form-error {
+  padding: var(--spacing-3) var(--spacing-md);
+  border: 1px solid var(--color-ui-danger);
+  border-radius: var(--border-radius-md);
+  color: var(--color-ui-danger);
+  background: var(--color-ui-danger-bg);
+}
+
+.br-loading {
+  color: var(--color-text-secondary);
+}
+
+.br-item-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.br-item-group {
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-bg-surface);
+}
+
+.br-item-group > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-3) var(--spacing-md);
+  cursor: pointer;
+}
+
+.br-item-name {
+  font-weight: var(--typography-font-weight-semibold);
+}
+
+.br-item-counts {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+  font-size: var(--typography-font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.br-count-active {
+  color: var(--color-text-primary);
+}
+
+.br-instance-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--spacing-md) var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.br-instance {
+  padding: var(--spacing-3);
+  border-top: 1px solid var(--color-ui-border);
+}
+
+.br-instance-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm) var(--spacing-md);
+}
+
+.br-instance-retired .br-instance-source {
+  color: var(--color-text-dim);
+  text-decoration: line-through;
+}
+
+.br-instance-date,
+.br-instance-note {
+  font-size: var(--typography-font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.br-instance-note {
+  font-style: italic;
+}
+
+.br-instance-actions {
+  margin-left: auto;
+}
+
+.br-status {
+  padding: 0 var(--spacing-2);
+  border-radius: var(--border-radius-badge);
+  font-size: var(--typography-font-size-xs);
+  font-weight: var(--typography-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--color-br-accent) 20%, transparent);
+}
+
+.br-status[data-status='retired'] {
+  color: var(--color-text-dim);
+  background: var(--color-bg-elevated);
+}
+
+.br-instance-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-md);
+  background: var(--color-bg-elevated);
+}
+
+.br-instance-confirm p {
+  margin: 0;
+  flex-basis: 100%;
+}
+
+/* Dialogs */
+.br-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.br-dialog {
+  position: static;
+  width: min(100%, 420px);
+  margin: 0;
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-ui-border-strong);
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-xl);
+}
+
+.br-dialog h3 {
+  margin: 0 0 var(--spacing-md);
+}
+
+.br-dialog form,
+.br-instance-confirm label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.br-dialog label,
+.br-instance-confirm label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  font-size: var(--typography-font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.br-dialog input,
+.br-dialog select,
+.br-instance-confirm input {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-md);
+  font: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface);
+}
+
+.br-dialog-actions {
+  justify-content: flex-end;
+}
+
+/* Purchases */
+.br-purchase {
+  border: 1px solid var(--color-ui-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-bg-surface);
+}
+
+.br-purchase > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-3) var(--spacing-md);
+  cursor: pointer;
+}
+
+.br-purchase-date,
+.br-purchase-count {
+  font-size: var(--typography-font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.br-purchase-count {
+  margin-left: auto;
+}
+
+.br-purchase-body {
+  padding: 0 var(--spacing-md) var(--spacing-3);
+}
+
+.br-purchase-note {
+  font-size: var(--typography-font-size-sm);
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.br-purchase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-3);
+}

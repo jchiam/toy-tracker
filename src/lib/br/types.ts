@@ -79,12 +79,32 @@ export interface ProductPartQuantity {
   variant?: PartVariant;
 }
 
-/** Which named parts ship in one product. Hand-curated. */
+/** Kinds of non-part box contents the app tracks. Never a part slot. */
+export type AccessoryKind = 'charger' | 'colosseum';
+
+/** One trackable non-part item, such as a charger or an arena. Hand-curated. */
+export interface Accessory {
+  /** `<kind>:<slug>`, e.g. `charger:ride-charger`. Stable id. */
+  id: string;
+  kind: AccessoryKind;
+  nameEn: string;
+  nameJa: string;
+}
+
+export interface ProductAccessoryQuantity {
+  accessoryId: string;
+  quantity: number;
+}
+
+/** Which named parts and accessories ship in one product. Hand-curated. */
 export interface ProductParts {
   productCode: string;
   parts: ProductPartQuantity[];
+  /** Trackable non-part contents. Printed contents with no line here are not tracked. */
+  accessories?: ProductAccessoryQuantity[];
   /** Where this mapping was confirmed from. */
   source: string;
 }
 
 export const SLOTS: Slot[] = ['cowl', 'bumper', 'tire', 'chassis'];
+export const ACCESSORY_KINDS: AccessoryKind[] = ['charger', 'colosseum'];

@@ -7,5 +7,6 @@ export const brRoutes = {
   product: (code: string) => `${BR_BASE}/catalog/products/${encodeURIComponent(code)}`,
   parts: `${BR_BASE}/catalog/parts`,
   inventory: `${BR_BASE}/inventory`,
+  purchases: `${BR_BASE}/inventory/purchases`,
   builds: `${BR_BASE}/builds`,
 };

@@ -1,4 +1,4 @@
-import type { ContentsKey, Price, ProductType, Slot, Style } from './types';
+import type { AccessoryKind, ContentsKey, Price, ProductType, Slot, Style } from './types';
 
 export const TYPE_LABELS: Record<ProductType, string> = {
   'starter-set': 'Starter Set',
@@ -49,4 +49,20 @@ export function formatDate(isoDate: string): string {
     day: 'numeric',
     timeZone: 'UTC',
   });
+}
+
+export const ACCESSORY_KIND_LABELS: Record<AccessoryKind, string> = {
+  charger: 'Charger',
+  colosseum: 'Colosseum',
+};
+
+export const ACCESSORY_KIND_HEADINGS: Record<AccessoryKind, string> = {
+  charger: 'Chargers',
+  colosseum: 'Colosseums',
+};
+
+/** Today's date as `YYYY-MM-DD` in the user's local time zone. */
+export function todayIso(now: Date = new Date()): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }

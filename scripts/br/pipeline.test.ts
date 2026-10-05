@@ -46,6 +46,7 @@ function setup(present = false) {
     shots,
     parts,
     productParts,
+    accessories: [],
     store,
     fetchImage: async () => Buffer.from('shot'),
     write,

@@ -6,7 +6,7 @@
 import { publishShots } from './images.ts';
 import type { ImageStore } from './images.ts';
 import { validateCatalog } from '../../src/lib/br/validate.ts';
-import type { Part, Product, ProductParts } from '../../src/lib/br/types.ts';
+import type { Accessory, Part, Product, ProductParts } from '../../src/lib/br/types.ts';
 
 export interface CompleteCatalogOptions {
   products: Product[];
@@ -14,6 +14,7 @@ export interface CompleteCatalogOptions {
   shots: Map<string, string[]>;
   parts: Part[];
   productParts: ProductParts[];
+  accessories: Accessory[];
   /** Null when image CDN credentials are not configured. */
   store: ImageStore | null;
   fetchImage: (url: string) => Promise<Buffer>;
@@ -28,13 +29,19 @@ export async function completeCatalog({
   shots,
   parts,
   productParts,
+  accessories,
   store,
   fetchImage,
   reupload = false,
   write,
   log = console.log,
 }: CompleteCatalogOptions): Promise<void> {
-  const { errors, unmapped, missingImages } = validateCatalog(products, parts, productParts);
+  const { errors, unmapped, missingImages } = validateCatalog(
+    products,
+    parts,
+    productParts,
+    accessories,
+  );
   if (errors.length > 0) {
     throw new Error(`Curated parts data is invalid:\n  ${errors.join('\n  ')}`);
   }
