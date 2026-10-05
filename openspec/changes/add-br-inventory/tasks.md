@@ -42,6 +42,6 @@
 
 ## 7. Integration
 
-- [ ] 7.1 Run `npm run lint`, `npm run format:check`, `npm run test`, `npm run build`, and `npm run verify:csp` and confirm all pass
-- [ ] 7.2 Run the full Playwright suite with `npm run test:e2e` and confirm it passes
-- [ ] 7.3 Update CLAUDE.md's Architecture section for the inventory tables, `src/services/`, `accessories.json`, and the Inventory routes, and verify the documented commands run as written
+- [x] 7.1 Run `npm run lint`, `npm run format:check`, `npm run test`, `npm run build`, and `npm run verify:csp` and confirm all pass
+- [x] 7.2 Run the full Playwright suite with `npm run test:e2e` and confirm it passes
+- [x] 7.3 Update CLAUDE.md's Architecture section for the inventory tables, `src/services/`, `accessories.json`, and the Inventory routes, and verify the documented commands run as written
