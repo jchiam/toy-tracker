@@ -114,6 +114,13 @@ describe('BuildList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'New build' }));
     expect(screen.getByRole('dialog', { name: 'New build' })).toBeInTheDocument();
   });
+
+  it('closes the new build dialog on cancel', async () => {
+    renderList([]);
+    await userEvent.click(screen.getByRole('button', { name: 'New build' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
 });
 
 describe('NewBuildDialog', () => {

@@ -222,6 +222,69 @@ describe('BuildView for a plan', () => {
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Idea');
   });
 
+  it('says the build is loading while either source still loads', () => {
+    renderView(makeBuild(), { state: { loading: true } });
+    expect(screen.getByText('Loading build...')).toBeInTheDocument();
+  });
+
+  it('cancels a rename without writing', async () => {
+    const actions = renderView(makeBuild({ name: 'Idea' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    await userEvent.click(
+      within(screen.getByRole('form', { name: 'Rename this build' })).getByRole('button', {
+        name: 'Cancel',
+      }),
+    );
+    expect(screen.queryByRole('form', { name: 'Rename this build' })).toBeNull();
+    expect(actions.updateBuild).not.toHaveBeenCalled();
+  });
+
+  it('keeps the rename form open when the write fails', async () => {
+    const actions = renderView(makeBuild({ id: 'b1', name: 'Idea' }));
+    vi.mocked(actions.updateBuild).mockRejectedValueOnce(new Error('down'));
+    await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save name' }));
+    expect(actions.updateBuild).toHaveBeenCalledWith('b1', { name: 'Idea' });
+    expect(screen.getByRole('form', { name: 'Rename this build' })).toBeInTheDocument();
+  });
+
+  it('cancels a delete without writing', async () => {
+    const actions = renderView(makeBuild());
+    await userEvent.click(screen.getByRole('button', { name: 'Delete build' }));
+    await userEvent.click(
+      within(screen.getByRole('group', { name: 'Delete this build' })).getByRole('button', {
+        name: 'Cancel',
+      }),
+    );
+    expect(screen.queryByRole('group', { name: 'Delete this build' })).toBeNull();
+    expect(actions.deleteBuild).not.toHaveBeenCalled();
+  });
+
+  it('stays on the build when deleting fails', async () => {
+    const actions = renderView(makeBuild({ id: 'b1' }));
+    vi.mocked(actions.deleteBuild).mockRejectedValueOnce(new Error('down'));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete build' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(actions.deleteBuild).toHaveBeenCalledWith('b1');
+    expect(screen.getByTestId('location')).toHaveTextContent(/^\/baraba-ride\/builds\/b1$/);
+  });
+
+  it('names every built build holding a matching part', () => {
+    const alpha = makeInstance({ id: 'a1', itemId: 'chassis:alpha' });
+    const beta = makeInstance({ id: 'a2', itemId: 'chassis:alpha' });
+    const built = (id: string, name: string, instance: Instance) =>
+      makeBuild({ id, name, status: 'built', parts: [claim('chassis', instance)] });
+    const redDash = built('rd', 'Red Dash', alpha);
+    const blueDash = built('bd', 'Blue Dash', beta);
+    renderView(makeBuild({ parts: [wish('chassis', 'chassis:alpha')] }), {
+      instances: [alpha, beta],
+      others: [redDash, blueDash],
+    });
+    expect(position('Chassis').getByText(/In use by/)).toHaveTextContent(
+      'In use by Red Dash, Blue Dash',
+    );
+  });
+
   it('marks built with the claims shown in the dialog', async () => {
     const build = makeBuild({
       id: 'b1',
@@ -346,6 +409,53 @@ describe('BuildView for a built build', () => {
     expect(actions.takeApart).not.toHaveBeenCalled();
     await userEvent.click(confirm.getByRole('button', { name: 'Confirm take apart' }));
     expect(actions.takeApart).toHaveBeenCalledWith('b1');
+  });
+
+  it('cancels taking apart without writing', async () => {
+    const instances = stock();
+    const actions = renderView(builtFrom(instances), { instances });
+    await userEvent.click(screen.getByRole('button', { name: 'Take apart' }));
+    await userEvent.click(
+      within(screen.getByRole('group', { name: 'Take this build apart' })).getByRole('button', {
+        name: 'Cancel',
+      }),
+    );
+    expect(screen.queryByRole('group', { name: 'Take this build apart' })).toBeNull();
+    expect(actions.takeApart).not.toHaveBeenCalled();
+  });
+
+  it('keeps the take-apart confirmation open when the write fails', async () => {
+    const instances = stock();
+    const actions = renderView(builtFrom(instances, { id: 'b1' }), { instances });
+    vi.mocked(actions.takeApart).mockRejectedValueOnce(new Error('down'));
+    await userEvent.click(screen.getByRole('button', { name: 'Take apart' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm take apart' }));
+    expect(actions.takeApart).toHaveBeenCalledWith('b1');
+    expect(screen.getByRole('group', { name: 'Take this build apart' })).toBeInTheDocument();
+  });
+
+  it('shows the message in the picker when a swap fails', async () => {
+    const instances = [...stock(), makeInstance({ id: 'spare', itemId: 'cowl:fury-lizard' })];
+    const actions = renderView(builtFrom(instances), { instances });
+    vi.mocked(actions.swapBuiltPosition).mockRejectedValueOnce(
+      new Error('Could not swap position: taken'),
+    );
+    await userEvent.click(position('Cowl').getByRole('button', { name: 'Swap' }));
+    const dialog = within(screen.getByRole('dialog'));
+    await userEvent.click(dialog.getByRole('button', { name: /Fury Lizard/ }));
+    expect(dialog.getByRole('alert')).toHaveTextContent('Could not swap position: taken');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('says the source is unknown for a held any-variant instance the inventory lacks', () => {
+    const instances = stock();
+    instances[1] = makeInstance({
+      id: 'co',
+      itemId: 'cowl:storm-falcon',
+      variantProductCode: null,
+    });
+    renderView(builtFrom(instances), { instances: instances.filter((i) => i.id !== 'co') });
+    expect(position('Cowl').getByText('Unknown source')).toBeInTheDocument();
   });
 
   it('says deleting frees the parts', async () => {
