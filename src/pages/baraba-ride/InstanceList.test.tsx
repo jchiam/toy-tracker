@@ -2,6 +2,9 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { InstanceList } from './InstanceList';
+import { MemoryRouter } from 'react-router';
+import { claims } from '@/lib/br/builds';
+import { claim, makeBuild } from '@/test/br-builds';
 import type { Instance, Purchase } from '@/lib/br/inventory-types';
 
 const purchase: Purchase = {
@@ -113,5 +116,64 @@ describe('InstanceList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
     await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
     expect(screen.getByRole('group', { name: 'Delete this item' })).toBeInTheDocument();
+  });
+});
+
+describe('InstanceList with build claims', () => {
+  const held = { ...base, id: 'held' };
+  const spare = { ...base, id: 'spare' };
+  const redDash = makeBuild({
+    id: 'rd',
+    name: 'Red Dash',
+    status: 'built',
+    parts: [claim('tire_fl', held)],
+  });
+
+  function renderClaimed() {
+    render(
+      <MemoryRouter>
+        <InstanceList
+          instances={[held, spare]}
+          purchases={[purchase]}
+          actions={actions}
+          claims={claims([redDash])}
+          label="RW32"
+        />
+      </MemoryRouter>,
+    );
+    return screen.getAllByRole('listitem').map((row) => within(row));
+  }
+
+  it('names the holding build as a link to it', () => {
+    const [heldRow, spareRow] = renderClaimed();
+    expect(heldRow.getByText(/In use by/)).toBeInTheDocument();
+    expect(heldRow.getByRole('link', { name: 'Red Dash' })).toHaveAttribute(
+      'href',
+      '/baraba-ride/builds/rd',
+    );
+    expect(spareRow.queryByText(/In use by/)).toBeNull();
+    expect(spareRow.queryByRole('link')).toBeNull();
+  });
+
+  it('makes retire and delete unavailable for a held instance, with the reason', async () => {
+    const [heldRow] = renderClaimed();
+    const retire = heldRow.getByRole('button', { name: 'Retire' });
+    const remove = heldRow.getByRole('button', { name: 'Delete' });
+    expect(retire).toBeDisabled();
+    expect(remove).toBeDisabled();
+    expect(retire).toHaveAccessibleDescription('In use by Red Dash');
+    expect(remove).toHaveAccessibleDescription('In use by Red Dash');
+    await userEvent.click(retire);
+    await userEvent.click(remove);
+    expect(screen.queryByRole('form', { name: 'Retire this item' })).toBeNull();
+    expect(screen.queryByRole('group', { name: 'Delete this item' })).toBeNull();
+  });
+
+  it('leaves an instance no build holds retirable and deletable', async () => {
+    const [, spareRow] = renderClaimed();
+    expect(spareRow.getByRole('button', { name: 'Retire' })).toBeEnabled();
+    await userEvent.click(spareRow.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(actions.onDelete).toHaveBeenCalledWith('spare');
   });
 });

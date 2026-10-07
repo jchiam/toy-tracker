@@ -9,4 +9,5 @@ export const brRoutes = {
   inventory: `${BR_BASE}/inventory`,
   purchases: `${BR_BASE}/inventory/purchases`,
   builds: `${BR_BASE}/builds`,
+  build: (id: string) => `${BR_BASE}/builds/${encodeURIComponent(id)}`,
 };

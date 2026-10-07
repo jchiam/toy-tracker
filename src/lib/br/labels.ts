@@ -1,4 +1,5 @@
 import type { AccessoryKind, ContentsKey, Price, ProductType, Slot, Style } from './types';
+import type { Position } from './build-types';
 
 export const TYPE_LABELS: Record<ProductType, string> = {
   'starter-set': 'Starter Set',
@@ -59,6 +60,16 @@ export const ACCESSORY_KIND_LABELS: Record<AccessoryKind, string> = {
 export const ACCESSORY_KIND_HEADINGS: Record<AccessoryKind, string> = {
   charger: 'Chargers',
   colosseum: 'Colosseums',
+};
+
+export const POSITION_LABELS: Record<Position, string> = {
+  bumper: 'Bumper',
+  cowl: 'Cowl',
+  chassis: 'Chassis',
+  tire_fl: 'Front-left tire',
+  tire_fr: 'Front-right tire',
+  tire_rl: 'Rear-left tire',
+  tire_rr: 'Rear-right tire',
 };
 
 /** Today's date as `YYYY-MM-DD` in the user's local time zone. */

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import * as supabaseModule from '@/lib/supabase';
 import App from './App';
@@ -17,6 +18,7 @@ vi.mock('@/lib/supabase', () => ({
 
 const mockGetSession = vi.mocked(supabaseModule.supabase.auth.getSession);
 const mockOnAuthStateChange = vi.mocked(supabaseModule.supabase.auth.onAuthStateChange);
+const mockSignInWithOAuth = vi.mocked(supabaseModule.supabase.auth.signInWithOAuth);
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -48,4 +50,23 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Sign In with Google' })).toBeInTheDocument();
     });
   });
+
+  it.each(['/baraba-ride/builds/abc', '/baraba-ride?product=BR-01'])(
+    'starts sign-in from the gate at %s returning to that address',
+    async (address) => {
+      render(
+        <MemoryRouter initialEntries={[address]}>
+          <App />
+        </MemoryRouter>,
+      );
+      const gate = await screen.findByRole('heading', { name: 'Welcome to the Toy Zone' });
+      await userEvent.click(
+        within(gate.parentElement!).getByRole('button', { name: 'Sign In with Google' }),
+      );
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith({
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}${address}` },
+      });
+    },
+  );
 });

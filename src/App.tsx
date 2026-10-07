@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Routes, Route } from 'react-router';
+import { Routes, Route, useLocation } from 'react-router';
 import { GAMES } from '@/lib/games';
 import { Navbar } from '@/components/Navbar';
 import { SelectionPage } from '@/pages/SelectionPage';
@@ -8,6 +8,8 @@ import './App.css';
 
 function App() {
   const { session, isAuthLoading, signInWithGoogle, signOut } = useAuth();
+  // The gate signs in back to the address that was opened, so deep links survive.
+  const { pathname, search } = useLocation();
 
   return (
     <>
@@ -36,7 +38,7 @@ function App() {
                 <game.Page
                   session={session}
                   isAuthLoading={isAuthLoading}
-                  onSignIn={() => signInWithGoogle(game.path)}
+                  onSignIn={() => signInWithGoogle(pathname + search)}
                 />
               }
             />

@@ -21,5 +21,7 @@ describe('brRoutes', () => {
     expect(brRoutes.inventory).toBe('/baraba-ride/inventory');
     expect(brRoutes.purchases).toBe('/baraba-ride/inventory/purchases');
     expect(brRoutes.builds).toBe('/baraba-ride/builds');
+    expect(brRoutes.build('b1')).toBe('/baraba-ride/builds/b1');
+    expect(brRoutes.build('a/b')).toBe('/baraba-ride/builds/a%2Fb');
   });
 });
