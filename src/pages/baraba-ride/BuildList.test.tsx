@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { render, screen, cleanup, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
 import { BuildList } from './BuildList';
@@ -152,7 +152,10 @@ describe('NewBuildDialog', () => {
     await userEvent.click(dialog.getByRole('button', { name: 'Create build' }));
     expect(onSubmit).toHaveBeenCalledWith('Silver idea');
     expect(onClose).toHaveBeenCalled();
-    expect(screen.getByTestId('location')).toHaveTextContent('/baraba-ride/builds/new');
+    // The navigation follows the awaited submit, so it may land after the click settles.
+    await waitFor(() =>
+      expect(screen.getByTestId('location')).toHaveTextContent('/baraba-ride/builds/new'),
+    );
   });
 
   it('refuses a blank name without creating anything', async () => {

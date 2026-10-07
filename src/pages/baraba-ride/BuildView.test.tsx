@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { render, screen, cleanup, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, useLocation } from 'react-router';
 import { BuildView } from './BuildView';
@@ -213,7 +213,10 @@ describe('BuildView for a plan', () => {
     expect(actions.deleteBuild).not.toHaveBeenCalled();
     await userEvent.click(confirm.getByRole('button', { name: 'Confirm delete' }));
     expect(actions.deleteBuild).toHaveBeenCalledWith('b1');
-    expect(screen.getByTestId('location')).toHaveTextContent(/^\/baraba-ride\/builds$/);
+    // The navigation follows the awaited delete, so it may land after the click settles.
+    await waitFor(() =>
+      expect(screen.getByTestId('location')).toHaveTextContent(/^\/baraba-ride\/builds$/),
+    );
   });
 
   it('shows a write error and keeps the build shown', () => {
