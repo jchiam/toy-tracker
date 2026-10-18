@@ -54,14 +54,23 @@ const STYLE_CLASSES: Record<string, Style | null> = {
 const TYPES_JA: Record<string, ProductType> = {
   スターターセット: 'starter-set',
   ブースターセット: 'booster-set',
+  セット: 'set',
+  ブースターパック: 'booster-pack',
   ツール: 'tool',
 };
+
+/** Words the English site prints in capitals that stay capitalised when title-casing. */
+const ACRONYMS = new Set(['DX']);
 
 /** The stable manual link. The PDF behind it is served from a time-signed URL that expires. */
 const MANUAL_URL = /^https:\/\/toy\.bandai\.co\.jp\/manuals\/pdf\.php\?id=\d+$/;
 
-/** An official shot. The path carries an opaque token that Bandai may rotate. */
-const SHOT_URL = /^https:\/\/assets-toy\.bandai\.co\.jp\/\S+\.jpg$/;
+/**
+ * An official shot, on either Bandai-controlled host: the launch lineup is
+ * served from `assets-toy.bandai.co.jp` (the path carries an opaque token that
+ * Bandai may rotate), the second wave from Bandai's Akamai CDN.
+ */
+const SHOT_URL = /^https:\/\/(assets-toy\.bandai\.co\.jp|bandai-a\.akamaihd\.net)\/\S+\.jpg$/;
 
 /** Contents labels in output order. */
 const CONTENTS_JA: [string, ContentsKey][] = [
@@ -241,12 +250,15 @@ export function parseItemEn(html: string, code: string): ItemEn {
   return { code, nameEn: titleCase(match[2]) };
 }
 
-/** The English site prints names in capitals: `STORM FALCON` → `Storm Falcon`. */
+/** The English site prints names in capitals: `STORM FALCON` → `Storm Falcon`, `DX` stays `DX`. */
 function titleCase(text: string): string {
   return text
-    .toLowerCase()
     .split(/\s+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => {
+      if (ACRONYMS.has(word.toUpperCase())) return word.toUpperCase();
+      const lower = word.toLowerCase();
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
     .join(' ');
 }
 

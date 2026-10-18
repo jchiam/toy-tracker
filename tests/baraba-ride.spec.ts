@@ -9,12 +9,15 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-test('catalog lists the launch lineup and filters by style', async ({ page }) => {
+test('catalog lists the lineup and filters by style', async ({ page }) => {
   await page.goto('/baraba-ride');
   await expect(page).toHaveURL('/baraba-ride/catalog');
   const products = page.getByRole('region', { name: 'Products' });
-  await expect(products.getByRole('link')).toHaveCount(10);
+  await expect(products.getByRole('link')).toHaveCount(14);
   await expect(products.getByRole('heading', { name: 'Fold Colosseum' })).toBeVisible();
+  const tirePack = products.getByRole('link', { name: /BR-14/ });
+  await expect(tirePack.getByText('Booster Pack')).toBeVisible();
+  await expect(tirePack.locator('.br-badge-style')).toHaveCount(0);
 
   await page.getByRole('group', { name: 'Style' }).getByRole('button', { name: 'Spin' }).click();
   await expect(products.getByRole('link')).toHaveCount(3);
