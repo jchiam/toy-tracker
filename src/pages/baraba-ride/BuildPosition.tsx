@@ -72,7 +72,10 @@ function CheckLine({ check }: { check: PositionCheck }) {
   );
 }
 
-/** One position of a build: what it holds, how it checks, and the actions on it. */
+/**
+ * One position of a build: what it holds, how it checks, and the actions on it. The
+ * choose button stretches over the whole card (see `.br-position-choose`).
+ */
 export function BuildPosition({
   position,
   part,
@@ -114,11 +117,11 @@ export function BuildPosition({
       )}
       {check && <CheckLine check={check} />}
       <div className="br-instance-actions">
-        <button type="button" onClick={onChoose} disabled={busy}>
+        <button type="button" className="br-position-choose" onClick={onChoose} disabled={busy}>
           {built ? 'Swap' : part ? 'Change' : 'Choose'}
         </button>
         {onClear && part && (
-          <button type="button" onClick={onClear} disabled={busy}>
+          <button type="button" className="br-position-clear" onClick={onClear} disabled={busy}>
             Clear
           </button>
         )}

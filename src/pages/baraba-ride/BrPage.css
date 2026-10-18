@@ -355,6 +355,7 @@
 .br-instance-actions button,
 .br-instance-confirm button,
 .br-purchase-actions button {
+  min-height: 36px;
   padding: var(--spacing-2) var(--spacing-3);
   border: 1px solid var(--color-ui-border);
   border-radius: var(--border-radius-md);
@@ -624,6 +625,7 @@ button.br-danger:hover {
 
 /* Builds */
 .br-build-row {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -632,6 +634,31 @@ button.br-danger:hover {
   border: 1px solid var(--color-ui-border);
   border-radius: var(--border-radius-md);
   background: var(--color-bg-surface);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+/* The name link stretches over the row, so the whole row opens the build. */
+.br-build-row .br-item-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.br-build-row:hover {
+  border-color: var(--color-brand-primary);
+  background: var(--color-bg-surface-hover);
+}
+
+.br-build-row:has(.br-item-name:focus-visible) {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.br-build-row .br-item-name:focus-visible {
+  outline: none;
 }
 
 .br-status[data-status='plan'] {
@@ -678,6 +705,7 @@ button.br-danger:hover {
 }
 
 .br-position {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -685,6 +713,44 @@ button.br-danger:hover {
   border: 1px solid var(--color-ui-border);
   border-radius: var(--border-radius-md);
   background: var(--color-bg-surface);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+/*
+ * The choose button stretches over the card, so a click anywhere on it opens the
+ * picker. The card's links and Clear button sit above the stretch to stay reachable.
+ */
+.br-position-choose::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.br-position-choose:not(:disabled)::after {
+  cursor: pointer;
+}
+
+.br-position a,
+.br-position .br-position-clear {
+  position: relative;
+  z-index: 1;
+}
+
+.br-position:has(.br-position-choose:hover:not(:disabled)) {
+  border-color: var(--color-brand-primary);
+  background: var(--color-bg-surface-hover);
+}
+
+.br-position:has(.br-position-choose:focus-visible) {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.br-position-choose:focus-visible {
+  outline: none;
 }
 
 .br-position h3,
