@@ -84,10 +84,10 @@
   --z-index-sticky: 100;
   --z-index-modal: 1000;
   --z-index-toast: 9999;
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
-  --duration-instant: 0.01ms;
+  --transition-fast: 0.15s ease 0s;
+  --transition-normal: 0.3s ease 0s;
+  --transition-slow: 0.5s ease 0s;
+  --duration-instant: 0.00001s;
   --duration-fast: 0.15s;
   --duration-normal: 0.3s;
   --duration-slow: 0.5s;
