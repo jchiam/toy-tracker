@@ -644,7 +644,7 @@ button.br-danger:hover {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  border-radius: var(--border-radius-md);
 }
 
 .br-build-row:hover {
@@ -726,7 +726,7 @@ button.br-danger:hover {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  border-radius: var(--border-radius-md);
 }
 
 .br-position-choose:not(:disabled)::after {

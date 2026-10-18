@@ -174,6 +174,109 @@ test('a whole build row and a whole position card are clickable', async ({ page 
   await expect(page.getByRole('dialog', { name: 'Choose: bumper' })).toBeVisible();
 });
 
+test('a position opens its picker from the keyboard', async ({ page }) => {
+  const build = {
+    id: '33333333-3333-4333-8333-333333333333',
+    profile_id: '00000000-0000-4000-8000-000000000000',
+    name: 'Keyboard idea',
+    status: 'plan',
+    note: '',
+    created_at: '2026-10-06T00:00:00Z',
+    updated_at: '2026-10-06T00:00:00Z',
+    br_build_parts: [],
+  };
+  await page.route('**/rest/v1/br_builds*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([build]) }),
+  );
+
+  await page.goto(`/baraba-ride/builds/${build.id}`);
+  const choose = page
+    .getByRole('region', { name: 'Bumper' })
+    .getByRole('button', { name: 'Choose' });
+  // Tab forward until the position's single control holds focus.
+  for (let i = 0; i < 30 && !(await choose.evaluate((el) => el === document.activeElement)); i++) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(choose).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Choose: bumper' })).toBeVisible();
+});
+
+test('a built position opens the swap picker from its card', async ({ page }) => {
+  const build = {
+    id: '44444444-4444-4444-8444-444444444444',
+    profile_id: '00000000-0000-4000-8000-000000000000',
+    name: 'Built machine',
+    status: 'built',
+    note: '',
+    created_at: '2026-10-06T00:00:00Z',
+    updated_at: '2026-10-06T00:00:00Z',
+    br_build_parts: [],
+  };
+  await page.route('**/rest/v1/br_builds*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([build]) }),
+  );
+
+  await page.goto(`/baraba-ride/builds/${build.id}`);
+  // Away from the Swap button: the card's top-right corner.
+  const cowl = page.getByRole('region', { name: 'Cowl' });
+  await expect(cowl.getByRole('button', { name: 'Swap' })).toBeVisible();
+  const cardBox = (await cowl.boundingBox())!;
+  await page.mouse.click(cardBox.x + cardBox.width - 4, cardBox.y + 4);
+  await expect(page.getByRole('dialog', { name: 'Swap: cowl' })).toBeVisible();
+});
+
+test("a position's links and Clear keep their own action", async ({ page }) => {
+  const build = {
+    id: '55555555-5555-4555-8555-555555555555',
+    profile_id: '00000000-0000-4000-8000-000000000000',
+    name: 'Missing parts',
+    status: 'plan',
+    note: '',
+    created_at: '2026-10-06T00:00:00Z',
+    updated_at: '2026-10-06T00:00:00Z',
+    br_build_parts: [
+      {
+        position: 'cowl',
+        item_id: 'cowl:storm-falcon',
+        variant_product_code: null,
+        instance_id: null,
+      },
+      {
+        position: 'tire_fl',
+        item_id: 'tire:h36',
+        variant_product_code: 'BR-07',
+        instance_id: null,
+      },
+    ],
+  };
+  const deletes: string[] = [];
+  await page.route('**/rest/v1/user_profiles*', (route) =>
+    route.fulfill({ status: 201, contentType: 'application/json', body: '' }),
+  );
+  await page.route('**/rest/v1/br_build_parts*', async (route) => {
+    if (route.request().method() === 'DELETE') deletes.push(route.request().url());
+    await route.fulfill({ status: 204, body: '' });
+  });
+  await page.route('**/rest/v1/br_builds*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([build]) }),
+  );
+
+  // Playwright fails the click if the stretched choose button covers the target.
+  await page.goto(`/baraba-ride/builds/${build.id}`);
+  await page.getByRole('region', { name: 'Cowl' }).getByRole('button', { name: 'Clear' }).click();
+  await expect.poll(() => deletes.length).toBe(1);
+  expect(deletes[0]).toContain('position=eq.cowl');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+
+  await page
+    .getByRole('region', { name: 'Front-left tire' })
+    .getByRole('link', { name: 'BR-07' })
+    .click();
+  await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-07');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+});
+
 test('earlier query-string links reach their new addresses', async ({ page }) => {
   await page.goto('/baraba-ride?product=BR-01');
   await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-01');
