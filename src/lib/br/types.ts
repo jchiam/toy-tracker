@@ -1,7 +1,11 @@
 /** Battle style a machine or kit is built around. Tools (e.g. arenas) have none. */
 export type Style = 'upper' | 'spin' | 'dash';
 
-export type ProductType = 'starter-set' | 'booster-set' | 'tool';
+/**
+ * How Bandai classes a box. A `set` bundles a machine with accessories (DX
+ * starter set); a `booster-pack` is a small blind pack of parts.
+ */
+export type ProductType = 'starter-set' | 'booster-set' | 'set' | 'booster-pack' | 'tool';
 
 /** Part slots a machine is assembled from. */
 export type Slot = 'cowl' | 'bumper' | 'tire' | 'chassis';

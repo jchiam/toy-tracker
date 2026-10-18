@@ -38,6 +38,10 @@ describe('ProductCatalog', () => {
       'BR-08',
       'BR-09',
       'BR-10',
+      'BR-11',
+      'BR-12',
+      'BR-13',
+      'BR-14',
     ]);
   });
 
@@ -57,6 +61,25 @@ describe('ProductCatalog', () => {
     const card = screen.getByRole('link', { name: /BR-10/ });
     expect(within(card).getByText('Tool')).toBeInTheDocument();
     expect(card.querySelector('.br-badge-style')).toBeNull();
+  });
+
+  it('labels the second-wave types', () => {
+    renderCatalog();
+    expect(
+      within(screen.getByRole('link', { name: /BR-12/ })).getByText('Set'),
+    ).toBeInTheDocument();
+    const pack = screen.getByRole('link', { name: /BR-14/ });
+    expect(within(pack).getByText('Booster Pack')).toBeInTheDocument();
+    expect(pack.querySelector('.br-badge-style')).toBeNull();
+  });
+
+  it('filters by a second-wave type', async () => {
+    const user = userEvent.setup();
+    renderCatalog();
+    await user.click(filter('Type', 'Booster Pack'));
+    expect(listedCodes()).toEqual(['BR-14']);
+    await user.click(filter('Type', 'Set'));
+    expect(listedCodes()).toEqual(['BR-12']);
   });
 
   it('filters by style', async () => {

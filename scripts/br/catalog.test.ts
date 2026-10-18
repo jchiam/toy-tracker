@@ -32,6 +32,10 @@ describe('parseLineup', () => {
       'BR-08',
       'BR-09',
       'BR-10',
+      'BR-11',
+      'BR-12',
+      'BR-13',
+      'BR-14',
     ]);
   });
 
@@ -47,6 +51,14 @@ describe('parseLineup', () => {
 
   it('gives tools no style', () => {
     expect(lineup.find((e) => e.code === 'BR-10')?.style).toBeNull();
+  });
+
+  it('gives a booster pack listed under the tool style no style', () => {
+    expect(lineup.find((e) => e.code === 'BR-14')).toEqual({
+      code: 'BR-14',
+      style: null,
+      sourceId: '01_21326',
+    });
   });
 
   it('fails when the lineup yields zero products', () => {
@@ -89,12 +101,33 @@ describe('parseItemJa', () => {
     expect(() => parseItemJa(html, 'BR-01')).toThrow(/BR-01: cannot parse images/);
   });
 
-  it('fails on a shot that is not on the official asset host', () => {
+  it('accepts shots on either official asset host', () => {
+    expect(parseItemJa(fixture('item-br-01.ja.html'), 'BR-01').shotUrls[0]).toMatch(
+      /^https:\/\/assets-toy\.bandai\.co\.jp\//,
+    );
+    expect(parseItemJa(fixture('item-br-12.ja.html'), 'BR-12').shotUrls).toEqual([
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_1.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_2.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_3.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_4.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_5.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_6.jpg',
+      'https://bandai-a.akamaihd.net/bc/img/model/xl/1000259488_7.jpg',
+    ]);
+  });
+
+  it('fails on a shot that is not on an official asset host', () => {
     const html = fixture('item-br-01.ja.html').replace(
       'https://assets-toy.bandai.co.jp/',
       'https://example.com/',
     );
     expect(() => parseItemJa(html, 'BR-01')).toThrow(/BR-01: cannot parse images/);
+
+    const akamai = fixture('item-br-12.ja.html').replace(
+      'https://bandai-a.akamaihd.net/',
+      'https://bandai-a.example.net/',
+    );
+    expect(() => parseItemJa(akamai, 'BR-12')).toThrow(/BR-12: cannot parse images/);
   });
 
   it('parses a booster set, which has no chassis or charger', () => {
@@ -109,6 +142,27 @@ describe('parseItemJa', () => {
     expect(item.type).toBe('tool');
     expect(item.nameJa).toBe('フォールドコロシアム');
     expect(item.contents).toEqual({ body: 1 });
+  });
+
+  it('parses a set, whose title has a doubled space before the name', () => {
+    const item = parseItemJa(fixture('item-br-12.ja.html'), 'BR-12');
+    expect(item.type).toBe('set');
+    expect(item.nameJa).toBe('DXスターターセット');
+    expect(item.price.amount).toBe(7150);
+    expect(item.releaseDate).toBe('2026-11-07');
+    expect(item.contents).toEqual({ body: 1 });
+    expect(item).not.toHaveProperty('manualUrl');
+  });
+
+  it('parses a booster pack, stopping the contents list at its note line', () => {
+    const item = parseItemJa(fixture('item-br-14.ja.html'), 'BR-14');
+    expect(item.type).toBe('booster-pack');
+    expect(item.nameJa).toBe('ランダムタイヤコレクション Vol.1');
+    expect(item.price.amount).toBe(550);
+    expect(item.releaseDate).toBe('2026-12-05');
+    expect(item.contents).toEqual({ tire: 4, sticker: 1 });
+    expect(item.shotUrls).toHaveLength(8);
+    expect(item).not.toHaveProperty('manualUrl');
   });
 
   it('fails naming the product and field when the price is unparseable', () => {
@@ -150,6 +204,13 @@ describe('parseItemEn', () => {
     expect(parseItemEn(fixture('item-br-01.en.html'), 'BR-01').nameEn).toBe('Storm Falcon');
     expect(parseItemEn(fixture('item-br-07.en.html'), 'BR-07').nameEn).toBe('Falcon Kit');
     expect(parseItemEn(fixture('item-br-10.en.html'), 'BR-10').nameEn).toBe('Fold Colosseum');
+    expect(parseItemEn(fixture('item-br-14.en.html'), 'BR-14').nameEn).toBe(
+      'Random Tire Collection Vol.1',
+    );
+  });
+
+  it('keeps the DX acronym in capitals', () => {
+    expect(parseItemEn(fixture('item-br-12.en.html'), 'BR-12').nameEn).toBe('DX Starter Set');
   });
 
   it('fails when the page is for a different product', () => {

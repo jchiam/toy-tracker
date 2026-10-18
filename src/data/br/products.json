@@ -293,5 +293,111 @@
     "sourceId": "01_21008",
     "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21008/",
     "manualUrl": "https://toy.bandai.co.jp/manuals/pdf.php?id=2852821"
+  },
+  {
+    "code": "BR-11",
+    "nameEn": "Abyss Shark",
+    "nameJa": "アビスシャーク",
+    "type": "starter-set",
+    "style": "upper",
+    "price": {
+      "amount": 3300,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-11-07",
+    "contents": {
+      "body": 1
+    },
+    "images": [
+      "/assets/baraba-ride/products/BR-11/1.jpg",
+      "/assets/baraba-ride/products/BR-11/2.jpg",
+      "/assets/baraba-ride/products/BR-11/3.jpg",
+      "/assets/baraba-ride/products/BR-11/4.jpg",
+      "/assets/baraba-ride/products/BR-11/5.jpg"
+    ],
+    "sourceId": "01_21323",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21323/"
+  },
+  {
+    "code": "BR-12",
+    "nameEn": "DX Starter Set",
+    "nameJa": "DXスターターセット",
+    "type": "set",
+    "style": "upper",
+    "price": {
+      "amount": 7150,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-11-07",
+    "contents": {
+      "body": 1
+    },
+    "images": [
+      "/assets/baraba-ride/products/BR-12/1.jpg",
+      "/assets/baraba-ride/products/BR-12/2.jpg",
+      "/assets/baraba-ride/products/BR-12/3.jpg",
+      "/assets/baraba-ride/products/BR-12/4.jpg",
+      "/assets/baraba-ride/products/BR-12/5.jpg",
+      "/assets/baraba-ride/products/BR-12/6.jpg",
+      "/assets/baraba-ride/products/BR-12/7.jpg"
+    ],
+    "sourceId": "01_21324",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21324/"
+  },
+  {
+    "code": "BR-13",
+    "nameEn": "Iron Crust",
+    "nameJa": "アイアンクラスト",
+    "type": "booster-set",
+    "style": "dash",
+    "price": {
+      "amount": 1540,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-12-05",
+    "contents": {
+      "body": 1
+    },
+    "images": [
+      "/assets/baraba-ride/products/BR-13/1.jpg",
+      "/assets/baraba-ride/products/BR-13/2.jpg",
+      "/assets/baraba-ride/products/BR-13/3.jpg",
+      "/assets/baraba-ride/products/BR-13/4.jpg",
+      "/assets/baraba-ride/products/BR-13/5.jpg"
+    ],
+    "sourceId": "01_21325",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21325/"
+  },
+  {
+    "code": "BR-14",
+    "nameEn": "Random Tire Collection Vol.1",
+    "nameJa": "ランダムタイヤコレクション Vol.1",
+    "type": "booster-pack",
+    "style": null,
+    "price": {
+      "amount": 550,
+      "currency": "JPY",
+      "taxIncluded": true
+    },
+    "releaseDate": "2026-12-05",
+    "contents": {
+      "tire": 4,
+      "sticker": 1
+    },
+    "images": [
+      "/assets/baraba-ride/products/BR-14/1.jpg",
+      "/assets/baraba-ride/products/BR-14/2.jpg",
+      "/assets/baraba-ride/products/BR-14/3.jpg",
+      "/assets/baraba-ride/products/BR-14/4.jpg",
+      "/assets/baraba-ride/products/BR-14/5.jpg",
+      "/assets/baraba-ride/products/BR-14/6.jpg",
+      "/assets/baraba-ride/products/BR-14/7.jpg",
+      "/assets/baraba-ride/products/BR-14/8.jpg"
+    ],
+    "sourceId": "01_21326",
+    "sourceUrl": "https://toy.bandai.co.jp/ja/item/01_21326/"
   }
 ]

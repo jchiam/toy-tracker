@@ -4,6 +4,8 @@ import type { Position } from './build-types';
 export const TYPE_LABELS: Record<ProductType, string> = {
   'starter-set': 'Starter Set',
   'booster-set': 'Booster Set',
+  set: 'Set',
+  'booster-pack': 'Booster Pack',
   tool: 'Tool',
 };
 
