@@ -145,6 +145,35 @@ test('creating a build opens it as an empty plan', async ({ page }) => {
   await expect(page).toHaveURL('/baraba-ride/builds');
 });
 
+test('a whole build row and a whole position card are clickable', async ({ page }) => {
+  const build = {
+    id: '22222222-2222-4222-8222-222222222222',
+    profile_id: '00000000-0000-4000-8000-000000000000',
+    name: 'Blue idea',
+    status: 'plan',
+    note: '',
+    created_at: '2026-10-06T00:00:00Z',
+    updated_at: '2026-10-06T00:00:00Z',
+    br_build_parts: [],
+  };
+  await page.route('**/rest/v1/br_builds*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([build]) }),
+  );
+
+  await page.goto('/baraba-ride/builds');
+  // Away from the name link: the row's far end, past the readiness text.
+  const row = page.getByRole('list', { name: 'Builds' }).getByRole('listitem');
+  const rowBox = (await row.boundingBox())!;
+  await page.mouse.click(rowBox.x + rowBox.width - 4, rowBox.y + rowBox.height / 2);
+  await expect(page).toHaveURL(`/baraba-ride/builds/${build.id}`);
+
+  // Away from the Choose button: the card's top-right corner.
+  const bumper = page.getByRole('region', { name: 'Bumper' });
+  const cardBox = (await bumper.boundingBox())!;
+  await page.mouse.click(cardBox.x + cardBox.width - 4, cardBox.y + 4);
+  await expect(page.getByRole('dialog', { name: 'Choose: bumper' })).toBeVisible();
+});
+
 test('earlier query-string links reach their new addresses', async ({ page }) => {
   await page.goto('/baraba-ride?product=BR-01');
   await expect(page).toHaveURL('/baraba-ride/catalog/products/BR-01');
